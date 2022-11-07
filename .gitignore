@@ -1,0 +1,7 @@
+
+# cmake
+build*/
+cmake-build*/
+
+# clangd
+.cache/
