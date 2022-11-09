@@ -1,7 +1,6 @@
 
 #include "glad/gl.h"
 #include "render/Display.h"
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 static inline int start() {
@@ -26,11 +25,11 @@ static inline int start() {
 }
 
 #ifdef _WIN32 
-#include <winbase.h>
+#include <windows.h>
 
 int WinMain(HINSTANCE /* inst */,
 			HINSTANCE /* preInst */,
-			PWSTR /* args */,
+			LPSTR /* args */,
 			int /* shown */) {
 	return start();
 }
