@@ -2,8 +2,9 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
-namespace scr {
+namespace sh {
 
 	class Vm {
 	public:
@@ -13,8 +14,11 @@ namespace scr {
 			return state.get();
 		}
 
+		void open(std::vector<char> mem, std::string filename);
+		void open(std::string mem, std::string filename);
+
 	private:
 		std::shared_ptr<void> state;
 	};
 
-} // scr
+} // sh
