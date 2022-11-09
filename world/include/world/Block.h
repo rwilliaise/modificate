@@ -8,5 +8,5 @@ namespace sh {
 
 	private:
 
-	}
+	};
 }
