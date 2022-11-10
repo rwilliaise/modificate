@@ -1,5 +1,6 @@
 
 #include <script/Vm.h>
+#include <iostream>
 #include <string>
 
 extern "C" {
@@ -16,6 +17,22 @@ extern "C" {
 }
 
 namespace sh {
+
+	/** Some filesystem globals are banned and removed from default libs. */
+	static const char *bannedGlobals[] = {
+		"dofile", "loadfile",
+		"collectgarbage", // TODO: restricted version
+		"require", // TODO: restricted version
+	};
+
+	static const char *bannedIoGlobals[] = {
+		"close",
+		"open",
+		"popen",
+		"input",
+		"output",
+		"lines"
+	};
 
 	static void *basicAlloc(void * /* ud */, 
 							void *ptr,
@@ -34,10 +51,24 @@ namespace sh {
 	}
 	
 	Vm::Vm() {
-		state = std::shared_ptr<void>(lua_newstate(basicAlloc, this), [](void *p) {
+		lua_State *L = lua_newstate(basicAlloc, this);
+		state = std::shared_ptr<void>(L, [](void *p) {
 			lua_close((lua_State *) p);
 		});
-		luaL_openlibs(getState(*this));
+
+		lua_setwarnf(L, [](void* /* ud */, const char *msg, int /* tocont */) {
+			std::cerr << msg << std::endl;
+		}, nullptr);
+		luaL_openlibs(L);
+
+		// base libs
+
+		for (auto global : bannedGlobals) {
+			lua_pushnil(L);
+			lua_setglobal(L, global);
+		}
+
+		for (auto ioGlobal : 
 	}
 
 	void Vm::open(std::vector<char> mem, std::string name) {
@@ -46,8 +77,8 @@ namespace sh {
 
 	void Vm::open(std::string str, std::string name) {
 		lua_State *L = getState(*this);
-		luaL_loadbuffer(L, str.c_str(), str.size(), name.c_str());
-		lua_call(L, 0, 0);
+		luaL_loadstring(L, str.c_str());
+		lua_call(L, 0, 1);
 	}
 
 } // sh
