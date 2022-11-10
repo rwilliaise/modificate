@@ -5,6 +5,10 @@ set(CXX_STANDARD 17)
 
 enable_testing()
 
+find_package(glm REQUIRED)
+
+link_libraries(glm)
+
 # Personally, I use clangd which the only way to make compatible is to forcefully
 # include the MSYS dirs. Either that or put up with vcpkg.
 if(WIN32 AND NOT VCPKG_TARGET_TRIPLET) # no vcpkg installed

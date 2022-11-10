@@ -1,12 +1,18 @@
 
 #pragma once
 
+#include <functional>
+#include <glm/ext/vector_int3.hpp>
+
 namespace sh {
 
-	class Block {
-	public:
+	struct Block {
+		std::function<void (int)> stepped;
 
-	private:
+	};
 
+	struct BlockEntity {
+		Block& block;
+		glm::ivec3 pos;
 	};
 }
