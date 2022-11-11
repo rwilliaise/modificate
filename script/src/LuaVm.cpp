@@ -20,7 +20,8 @@ namespace sh {
 
 	/** Some filesystem globals are banned and removed from default libs. */
 	static const char *bannedGlobals[] = {
-		"dofile", "loadfile",
+		"dofile",
+		"loadfile",
 		"collectgarbage", // TODO: restricted version
 		"require", // TODO: restricted version
 	};
@@ -43,29 +44,6 @@ namespace sh {
 		} else { // realloc(std::nullptr_t, size_t) is analogous to malloc
 			return realloc(ptr, nsize);
 		}
-	}
-	static void dumpstack (lua_State *L) {
-	  int top=lua_gettop(L);
-	  for (int i=1; i <= top; i++) {
-		printf("%d\t%s\t", i, luaL_typename(L,i));
-		switch (lua_type(L, i)) {
-		  case LUA_TNUMBER:
-			printf("%g\n",lua_tonumber(L,i));
-			break;
-		  case LUA_TSTRING:
-			printf("%s\n",lua_tostring(L,i));
-			break;
-		  case LUA_TBOOLEAN:
-			printf("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
-			break;
-		  case LUA_TNIL:
-			printf("%s\n", "nil");
-			break;
-		  default:
-			printf("%p\n",lua_topointer(L,i));
-			break;
-		}
-	  }
 	}
 
 	static inline lua_State *getState(Vm& vm) {
