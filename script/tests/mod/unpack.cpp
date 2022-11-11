@@ -1,9 +1,10 @@
 
-#include "script/Mod.h"
 #include <exception>
 #include <iterator>
 #include <fstream>
 #include <iostream>
+
+#include "script/Mod.h"
 
 int main(int argc, char *argv[]) {
 	if (argc != 2) {
@@ -11,27 +12,19 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	try {
-		std::ifstream stream(argv[1], std::ios::binary);
-		
-		stream.unsetf(std::ios::skipws);
-
-		stream.seekg(0, std::ios::end);
+		std::ifstream stream(argv[1], std::ios::binary | std::ios::ate);
 		std::streampos size = stream.tellg();
 		stream.seekg(0, std::ios::beg);
 
-		std::vector<char> mem;
-		mem.reserve(size);
-
-		mem.insert(mem.begin(),
-				   std::istream_iterator<char>(stream),
-				   std::istream_iterator<char>());
+		std::vector<char> mem(size);
+		stream.read(mem.data(), mem.size());
 
 		stream.close();
 
 		sh::Mod mod;
 		mod.tar_loadFromMemory(mem);
 		
-		auto testLua = mod.vfs.find("script/tests/mod/test.lua");
+		auto testLua = mod.vfs.find("test.lua");
 		if (testLua == mod.vfs.end()) {
 			return 1;
 		}

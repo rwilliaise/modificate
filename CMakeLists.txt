@@ -6,8 +6,11 @@ set(CXX_STANDARD 17)
 enable_testing()
 
 find_package(glm REQUIRED)
+find_package(Boost 1.80 REQUIRED COMPONENTS
+			 json)
 
 link_libraries(glm)
+link_libraries(Boost::json)
 
 # Personally, I use clangd which the only way to make compatible is to forcefully
 # include the MSYS dirs. Either that or put up with vcpkg.

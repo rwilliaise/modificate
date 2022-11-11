@@ -7,6 +7,9 @@
 
 namespace sh {
 
+	/**
+	 * Intentionally opaque class to allow multiple backends.
+	 */
 	class Vm {
 	public:
 		Vm();
@@ -15,8 +18,11 @@ namespace sh {
 			return state.get();
 		}
 
-		void open(std::vector<char> mem, std::string filename);
-		void open(std::string mem, std::string filename);
+		/**
+		 * Runs a given chunk of memory. `filename` is used for debugging.
+		 */
+		bool open(std::vector<char> mem, std::string filename);
+		bool open(std::string mem, std::string filename);
 
 	private:
 		std::shared_ptr<void> state;
