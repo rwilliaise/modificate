@@ -7,7 +7,7 @@
 namespace sh {
 
 	struct Block {
-		std::function<void (int)> stepped;
+		std::function<void (glm::ivec3)> placed;
 
 	};
 

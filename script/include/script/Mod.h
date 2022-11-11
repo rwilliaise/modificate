@@ -2,6 +2,8 @@
 #pragma once
 
 #include <vector>
+#include <string>
+#include <unordered_map>
 
 namespace sh {
 
@@ -12,7 +14,8 @@ namespace sh {
 	public:
 
 		void tar_loadFromMemory(std::vector<char> mem);
-	private:
+		std::unordered_map<std::string, std::vector<char>> vfs;
 
+	private:
 	};
 }

@@ -12,6 +12,7 @@
 extern "C" {
 
 #include <lua.h>
+#include <lauxlib.h>
 
 }
 
@@ -25,9 +26,5 @@ int main(int argc, char *argv[]) {
 	vm.open(std::string(argv[1]), "<virtual>");
 	
 	lua_State *L = (lua_State *) vm.get();
-	if (lua_toboolean(L, 0)) {
-		return 0;
-	} else {
-		return 1;
-	}
+	return !lua_toboolean(L, 1);
 }

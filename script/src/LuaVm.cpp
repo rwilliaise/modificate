@@ -26,7 +26,6 @@ namespace sh {
 	};
 
 	static const char *bannedIoGlobals[] = {
-		"close",
 		"open",
 		"popen",
 		"input",
@@ -44,6 +43,29 @@ namespace sh {
 		} else { // realloc(std::nullptr_t, size_t) is analogous to malloc
 			return realloc(ptr, nsize);
 		}
+	}
+	static void dumpstack (lua_State *L) {
+	  int top=lua_gettop(L);
+	  for (int i=1; i <= top; i++) {
+		printf("%d\t%s\t", i, luaL_typename(L,i));
+		switch (lua_type(L, i)) {
+		  case LUA_TNUMBER:
+			printf("%g\n",lua_tonumber(L,i));
+			break;
+		  case LUA_TSTRING:
+			printf("%s\n",lua_tostring(L,i));
+			break;
+		  case LUA_TBOOLEAN:
+			printf("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
+			break;
+		  case LUA_TNIL:
+			printf("%s\n", "nil");
+			break;
+		  default:
+			printf("%p\n",lua_topointer(L,i));
+			break;
+		}
+	  }
 	}
 
 	static inline lua_State *getState(Vm& vm) {
@@ -68,7 +90,12 @@ namespace sh {
 			lua_setglobal(L, global);
 		}
 
-		for (auto ioGlobal : 
+		lua_getglobal(L, "io");
+		for (auto ioGlobal : bannedIoGlobals) {
+			lua_pushstring(L, ioGlobal);
+			lua_pushnil(L);
+			lua_settable(L, 1);
+		}
 	}
 
 	void Vm::open(std::vector<char> mem, std::string name) {
