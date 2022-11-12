@@ -20,7 +20,7 @@ namespace sh {
 
 		if (palette == UINT16_MAX) {
 			palette = world->next;
-			world->palette.insert(std::pair<uint16_t, std::string>(world->next++, identifier));
+			world->palette.insert({ world->next++, identifier });
 		}
 
 		blocks[pos.x][pos.y][pos.z] = palette;

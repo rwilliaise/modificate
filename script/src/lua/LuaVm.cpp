@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "LibBlock.h"
+
 extern "C" {
 
 #ifndef NDEBUG
@@ -17,6 +19,8 @@ extern "C" {
 }
 
 namespace sh {
+
+	class World;
 
 	/** Some filesystem globals are banned and removed from default libs. */
 	static const char *bannedGlobals[] = {
@@ -35,7 +39,17 @@ namespace sh {
 	};
 
 	static const luaL_Reg defaultLibs[] = {
-
+		{LUA_GNAME, luaopen_base},
+		// {LUA_LOADLIBNAME, luaopen_package}, TODO
+		{LUA_COLIBNAME, luaopen_coroutine},
+		{LUA_TABLIBNAME, luaopen_table},
+		{LUA_IOLIBNAME, luaopen_io},
+		{LUA_OSLIBNAME, luaopen_os},
+		{LUA_STRLIBNAME, luaopen_string},
+		{LUA_MATHLIBNAME, luaopen_math},
+		{LUA_UTF8LIBNAME, luaopen_utf8},
+		// {LUA_DBLIBNAME, luaopen_debug}, TODO
+		{"Block", openlib_block},
 	};
 
 	static void *basicAlloc(void * /* ud */, 
@@ -54,8 +68,8 @@ namespace sh {
 		return (lua_State *) vm.get();
 	}
 	
-	Vm::Vm() {
-		lua_State *L = lua_newstate(basicAlloc, this);
+	Vm::Vm(std::shared_ptr<World> world): world(world) {
+		lua_State *L = lua_newstate(basicAlloc, nullptr);
 		state = std::shared_ptr<void>(L, [](void *p) {
 			lua_close((lua_State *) p);
 		});
@@ -65,6 +79,11 @@ namespace sh {
 		}, nullptr);
 
 		// base libs
+		
+		for (auto reg : defaultLibs) {
+			luaL_requiref(L, reg.name, reg.func, 1);
+			lua_pop(L, 1);
+		}
 
 		for (auto global : bannedGlobals) {
 			lua_pushnil(L);
@@ -90,4 +109,5 @@ namespace sh {
 	}
 
 } // sh
+
 

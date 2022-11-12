@@ -6,8 +6,10 @@
 #include <iostream>
 #include <fstream>
 
+#include <memory>
 #include <script/Vm.h>
 #include <string>
+#include <world/World.h>
 
 extern "C" {
 
@@ -22,7 +24,8 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	sh::Vm vm;
+	std::shared_ptr<sh::World> world;
+	sh::Vm vm(world);
 	vm.open(std::string(argv[1]), "<virtual>");
 	
 	lua_State *L = (lua_State *) vm.get();

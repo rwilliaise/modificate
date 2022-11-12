@@ -15,8 +15,11 @@ namespace sh {
 	class Mod {
 	public:
 
+		Mod() = default;
 		Mod(const Mod&) = delete;
+		Mod(Mod&&) = default;
 		Mod& operator=(const Mod&) = delete;
+		Mod& operator=(Mod&&) = default;
 
 		/** 
 		 * Mounts to a given world. Expects vfs to be full. 

@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include <world/World.h>
+
 namespace sh {
 
 	/**
@@ -12,7 +14,7 @@ namespace sh {
 	 */
 	class Vm {
 	public:
-		Vm();
+		explicit Vm(std::shared_ptr<World> world);
 
 		inline void *get() { 
 			return state.get();
@@ -26,6 +28,9 @@ namespace sh {
 
 	private:
 		std::shared_ptr<void> state;
+		std::shared_ptr<World> world;
 	};
 
 } // sh
+
+

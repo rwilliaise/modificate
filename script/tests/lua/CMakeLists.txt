@@ -11,5 +11,6 @@ endfunction()
 
 expect("expect file loading" expect.lua)
 expect("io.tmpfile usage" tmpfile.lua)
+expect("Block: .new()" block.lua)
 
 

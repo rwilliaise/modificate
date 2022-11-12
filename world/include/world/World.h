@@ -8,8 +8,6 @@
 #include <glm/ext/vector_int3.hpp>
 #include <glm/gtx/hash.hpp>
 
-#include <script/Vm.h>
-
 #include "Block.h"
 
 namespace sh {

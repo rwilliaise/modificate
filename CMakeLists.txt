@@ -5,6 +5,8 @@ set(CXX_STANDARD 17)
 
 enable_testing()
 
+include(AddMod.cmake)
+
 find_package(glm REQUIRED)
 find_package(Boost 1.80 REQUIRED COMPONENTS
 			 json)
