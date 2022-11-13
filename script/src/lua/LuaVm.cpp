@@ -5,18 +5,7 @@
 
 #include "LibBlock.h"
 
-extern "C" {
-
-#ifndef NDEBUG
-#define LUA_USE_APICHECK
-#endif
-
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
-#include <stdlib.h>
-
-}
+#include <lua.hpp>
 
 namespace sh {
 
@@ -36,20 +25,6 @@ namespace sh {
 		"input",
 		"output",
 		"lines"
-	};
-
-	static const luaL_Reg defaultLibs[] = {
-		{LUA_GNAME, luaopen_base},
-		// {LUA_LOADLIBNAME, luaopen_package}, TODO
-		{LUA_COLIBNAME, luaopen_coroutine},
-		{LUA_TABLIBNAME, luaopen_table},
-		{LUA_IOLIBNAME, luaopen_io},
-		{LUA_OSLIBNAME, luaopen_os},
-		{LUA_STRLIBNAME, luaopen_string},
-		{LUA_MATHLIBNAME, luaopen_math},
-		{LUA_UTF8LIBNAME, luaopen_utf8},
-		// {LUA_DBLIBNAME, luaopen_debug}, TODO
-		{"Block", openlib_block},
 	};
 
 	static void *basicAlloc(void * /* ud */, 
@@ -80,10 +55,7 @@ namespace sh {
 
 		// base libs
 		
-		for (auto reg : defaultLibs) {
-			luaL_requiref(L, reg.name, reg.func, 1);
-			lua_pop(L, 1);
-		}
+		luaL_openlibs(L);
 
 		for (auto global : bannedGlobals) {
 			lua_pushnil(L);

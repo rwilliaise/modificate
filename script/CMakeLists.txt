@@ -5,12 +5,9 @@ set(SCRIPT_SOURCES
 	src/Tar.cpp
 )
 
-
-find_package(Lua REQUIRED)
-
 add_library(script STATIC ${SCRIPT_SOURCES})
-target_include_directories(script PUBLIC include/ PRIVATE ${LUA_INCLUDE_DIRS})
-target_link_libraries(script PUBLIC world PRIVATE ${LUA_LIBRARIES})
+target_include_directories(script PUBLIC include/)
+target_link_libraries(script PUBLIC world PRIVATE lua)
 
 add_mod(src/lua/base/)
 

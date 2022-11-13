@@ -27,6 +27,7 @@ if(WIN32 AND NOT VCPKG_TARGET_TRIPLET) # no vcpkg installed
 	endif()
 endif()
 
+add_subdirectory(thirdparty/lua)
 add_subdirectory(thirdparty/glad)
 
 add_subdirectory(world)
