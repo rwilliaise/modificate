@@ -455,23 +455,23 @@ static int db_setcstacklimit (lua_State *L) {
 
 
 static const luaL_Reg dblib[] = {
-  {"debug", db_debug},
-  {"getuservalue", db_getuservalue},
-  {"gethook", db_gethook},
+//  {"debug", db_debug},
+//  {"getuservalue", db_getuservalue},
+//  {"gethook", db_gethook},
   {"getinfo", db_getinfo},
-  {"getlocal", db_getlocal},
-  {"getregistry", db_getregistry},
-  {"getmetatable", db_getmetatable},
-  {"getupvalue", db_getupvalue},
-  {"upvaluejoin", db_upvaluejoin},
-  {"upvalueid", db_upvalueid},
-  {"setuservalue", db_setuservalue},
-  {"sethook", db_sethook},
-  {"setlocal", db_setlocal},
-  {"setmetatable", db_setmetatable},
-  {"setupvalue", db_setupvalue},
+//  {"getlocal", db_getlocal},
+//  {"getregistry", db_getregistry},
+//  {"getmetatable", db_getmetatable},
+//  {"getupvalue", db_getupvalue},
+//  {"upvaluejoin", db_upvaluejoin},
+//  {"upvalueid", db_upvalueid},
+//  {"setuservalue", db_setuservalue},
+//  {"sethook", db_sethook},
+//  {"setlocal", db_setlocal},
+//  {"setmetatable", db_setmetatable},
+// {"setupvalue", db_setupvalue},
   {"traceback", db_traceback},
-  {"setcstacklimit", db_setcstacklimit},
+//  {"setcstacklimit", db_setcstacklimit},
   {NULL, NULL}
 };
 

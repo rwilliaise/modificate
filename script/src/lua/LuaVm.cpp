@@ -13,18 +13,7 @@ namespace sh {
 
 	/** Some filesystem globals are banned and removed from default libs. */
 	static const char *bannedGlobals[] = {
-		"dofile",
-		"loadfile",
 		"collectgarbage", // TODO: restricted version
-		"require", // TODO: restricted version
-	};
-
-	static const char *bannedIoGlobals[] = {
-		"open",
-		"popen",
-		"input",
-		"output",
-		"lines"
 	};
 
 	static void *basicAlloc(void * /* ud */, 
@@ -61,14 +50,6 @@ namespace sh {
 			lua_pushnil(L);
 			lua_setglobal(L, global);
 		}
-
-		lua_getglobal(L, "io");
-		for (auto ioGlobal : bannedIoGlobals) {
-			lua_pushstring(L, ioGlobal);
-			lua_pushnil(L);
-			lua_settable(L, 1);
-		}
-		lua_pop(L, 1);
 	}
 
 	bool Vm::open(std::vector<char> mem, std::string name) {

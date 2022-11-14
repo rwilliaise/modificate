@@ -1,5 +1,6 @@
 
 #include "LibBlock.h"
+#include <cstring>
 
 #define toluablock(L) ((LuaBlock *) luaL_checkudata(L, 1, LUA_BLOCK))
 
@@ -23,6 +24,9 @@ namespace sh {
 		LuaBlock *p = toluablock(L);
 		if (p->registered)
 			luaL_error(L, "attempt to reregister");
+		size_t size;
+		const char *id = lua_tolstring(L, -2, &size);
+		std::memcpy(&p->id, id, size);
 		return 1;
 	}
 

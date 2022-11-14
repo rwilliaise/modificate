@@ -197,57 +197,15 @@ static int pushmode (lua_State *L, int oldmode) {
 #define checkvalres(res) { if (res == -1) break; }
 
 static int luaB_collectgarbage (lua_State *L) {
-  static const char *const opts[] = {"stop", "restart", "collect",
-    "count", "step", "setpause", "setstepmul",
-    "isrunning", "generational", "incremental", NULL};
-  static const int optsnum[] = {LUA_GCSTOP, LUA_GCRESTART, LUA_GCCOLLECT,
-    LUA_GCCOUNT, LUA_GCSTEP, LUA_GCSETPAUSE, LUA_GCSETSTEPMUL,
-    LUA_GCISRUNNING, LUA_GCGEN, LUA_GCINC};
-  int o = optsnum[luaL_checkoption(L, 1, "collect", opts)];
+  static const char *const opts[] = {"count", NULL};
+  static const int optsnum[] = {LUA_GCCOUNT};
+  int o = optsnum[luaL_checkoption(L, 1, "count", opts)];
   switch (o) {
     case LUA_GCCOUNT: {
       int k = lua_gc(L, o);
       int b = lua_gc(L, LUA_GCCOUNTB);
       checkvalres(k);
       lua_pushnumber(L, (lua_Number)k + ((lua_Number)b/1024));
-      return 1;
-    }
-    case LUA_GCSTEP: {
-      int step = (int)luaL_optinteger(L, 2, 0);
-      int res = lua_gc(L, o, step);
-      checkvalres(res);
-      lua_pushboolean(L, res);
-      return 1;
-    }
-    case LUA_GCSETPAUSE:
-    case LUA_GCSETSTEPMUL: {
-      int p = (int)luaL_optinteger(L, 2, 0);
-      int previous = lua_gc(L, o, p);
-      checkvalres(previous);
-      lua_pushinteger(L, previous);
-      return 1;
-    }
-    case LUA_GCISRUNNING: {
-      int res = lua_gc(L, o);
-      checkvalres(res);
-      lua_pushboolean(L, res);
-      return 1;
-    }
-    case LUA_GCGEN: {
-      int minormul = (int)luaL_optinteger(L, 2, 0);
-      int majormul = (int)luaL_optinteger(L, 3, 0);
-      return pushmode(L, lua_gc(L, o, minormul, majormul));
-    }
-    case LUA_GCINC: {
-      int pause = (int)luaL_optinteger(L, 2, 0);
-      int stepmul = (int)luaL_optinteger(L, 3, 0);
-      int stepsize = (int)luaL_optinteger(L, 4, 0);
-      return pushmode(L, lua_gc(L, o, pause, stepmul, stepsize));
-    }
-    default: {
-      int res = lua_gc(L, o);
-      checkvalres(res);
-      lua_pushinteger(L, res);
       return 1;
     }
   }
@@ -336,16 +294,6 @@ static int load_aux (lua_State *L, int status, int envidx) {
   }
 }
 
-
-static int luaB_loadfile (lua_State *L) {
-  const char *fname = luaL_optstring(L, 1, NULL);
-  const char *mode = luaL_optstring(L, 2, NULL);
-  int env = (!lua_isnone(L, 3) ? 3 : 0);  /* 'env' index or 0 if no 'env' */
-  int status = luaL_loadfilex(L, fname, mode);
-  return load_aux(L, status, env);
-}
-
-
 /*
 ** {======================================================
 ** Generic Read function
@@ -404,22 +352,6 @@ static int luaB_load (lua_State *L) {
 }
 
 /* }====================================================== */
-
-
-static int dofilecont (lua_State *L, int d1, lua_KContext d2) {
-  (void)d1;  (void)d2;  /* only to match 'lua_Kfunction' prototype */
-  return lua_gettop(L) - 1;
-}
-
-
-static int luaB_dofile (lua_State *L) {
-  const char *fname = luaL_optstring(L, 1, NULL);
-  lua_settop(L, 1);
-  if (l_unlikely(luaL_loadfile(L, fname) != LUA_OK))
-    return lua_error(L);
-  lua_callk(L, 0, LUA_MULTRET, 0, dofilecont);
-  return dofilecont(L, 0, 0);
-}
 
 
 static int luaB_assert (lua_State *L) {
@@ -506,11 +438,9 @@ static int luaB_tostring (lua_State *L) {
 static const luaL_Reg base_funcs[] = {
   {"assert", luaB_assert},
   {"collectgarbage", luaB_collectgarbage},
-  {"dofile", luaB_dofile},
   {"error", luaB_error},
   {"getmetatable", luaB_getmetatable},
   {"ipairs", luaB_ipairs},
-  {"loadfile", luaB_loadfile},
   {"load", luaB_load},
   {"next", luaB_next},
   {"pairs", luaB_pairs},
