@@ -23,6 +23,11 @@ int main(int argc, char *argv[]) {
 
 		sh::Mod mod;
 		mod.tar_loadFromMemory(mem);
+
+		std::cout << "count: " << mod.vfs.size() << std::endl;
+		for (auto pair : mod.vfs) {
+			std::cout << pair.first << ":\t\t\"" << std::string(pair.second.data(), pair.second.size()).c_str() << "\"" << std::endl;
+		}
 		
 		auto testLua = mod.vfs.find("test.lua");
 		if (testLua == mod.vfs.end()) {

@@ -24,11 +24,21 @@ namespace sh {
 		/** 
 		 * Mounts to a given world. Expects vfs to be full. 
 		 */
-		void mount(World& world);
+		bool mount(std::shared_ptr<World> world);
+
+		/**
+		 * Runs a given chunk of memory. `filename` is used for debugging.
+		 */
+		bool open(std::vector<char> mem, std::string filename);
+		bool open(std::string mem, std::string filename);
+
 		void tar_loadFromMemory(std::vector<char> mem);
 
 		std::unordered_map<std::string, std::vector<char>> vfs;
 
 	private:
+		friend class Vm;
+		
+		std::shared_ptr<void> context;
 	};
 }

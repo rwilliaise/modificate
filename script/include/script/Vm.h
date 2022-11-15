@@ -4,8 +4,9 @@
 #include <memory>
 #include <vector>
 #include <string>
-
 #include <world/World.h>
+
+#include "Mod.h" 
 
 namespace sh {
 
@@ -17,17 +18,16 @@ namespace sh {
 		explicit Vm(std::shared_ptr<World> world);
 
 		inline void *get() { 
-			return state.get();
+			return global.get();
 		}
 
 		/**
-		 * Runs a given chunk of memory. `filename` is used for debugging.
+		 * Split global context into another smaller context (mod).
 		 */
-		bool open(std::vector<char> mem, std::string filename);
-		bool open(std::string mem, std::string filename);
+		void split(Mod& mod);
 
 	private:
-		std::shared_ptr<void> state;
+		std::shared_ptr<void> global;
 		std::shared_ptr<World> world;
 	};
 

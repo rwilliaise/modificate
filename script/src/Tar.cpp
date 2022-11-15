@@ -22,7 +22,7 @@ namespace sh {
 
 	void Mod::tar_loadFromMemory(std::vector<char> mem) {
 		for (size_t i = 0; i < mem.size();) {
-			if (std::strcmp(&mem[i + 257], "ustar") != 1) {
+			if (std::string(&mem[i + 257], 5) != "ustar") {
 				return;
 			}
 			std::string filename(&mem[i]);
@@ -36,7 +36,7 @@ namespace sh {
 			case '0':
 				std::vector<char> file(size);
 				std::memcpy(file.data(), &mem[i], size);
-				vfs.insert({ filename, file });
+				vfs[filename] = file;
 				i += size;
 				break;
 			}
