@@ -10,6 +10,10 @@ namespace sh {
 
 	class World;
 
+	const static luaL_Reg mod_libs[] = {
+		{"Block", openlib_block},
+	};
+
 	static void *basicAlloc(void * /* ud */, 
 							void *ptr,
 							size_t /* osize */,
@@ -37,10 +41,18 @@ namespace sh {
 		}, nullptr);
 
 		luaL_openlibs(L);
+
+		for (auto reg : mod_libs) {
+			luaL_requiref(L, reg.name, reg.func, 1);
+			lua_pop(L, -1);
+		}
 	}
 
 	void Vm::split(Mod &mod) {
-
+		if (mod.context != nullptr)
+			std::cout << "WARNING: Mod VM already split - this may be very bad" << std::endl;
+		std::cout << "Split mod state" << std::endl;
+		mod.context = std::shared_ptr<void>(lua_newthread(getState(*this)), [](void *) {});
 	}
 } // sh
 

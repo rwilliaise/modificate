@@ -10,7 +10,6 @@ function(expect EXPECTED_NAME EXPECTED_FILE)
 endfunction()
 
 expect("expect file loading" expect.lua)
-expect("io.tmpfile usage" tmpfile.lua)
 expect("Block: .new()" block.lua)
 
 
