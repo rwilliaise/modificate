@@ -1,11 +1,5 @@
 
 local TestBlock = Block.new()
-
-function TestBlock:Registered()
-	print(self)
-
-end
-
-TestBlock:Register("TestBlock")
+TestBlock:register("TestBlock")
 
 return TestBlock ~= nil
