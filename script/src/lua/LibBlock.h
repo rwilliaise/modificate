@@ -4,12 +4,7 @@
 #include <world/Block.h>
 #include <string>
 
-extern "C" {
-
-#include <lua.h>
-#include <lauxlib.h>
-
-}
+#include <lua.hpp>
 
 #define LUA_BLOCK "Block"
 

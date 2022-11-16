@@ -16,5 +16,5 @@ else()
 	add_executable(client ${CLIENT_SOURCES})
 endif()
 
-target_link_libraries(client PRIVATE glfw glad)
+target_link_libraries(client PRIVATE glfw glad world script)
 

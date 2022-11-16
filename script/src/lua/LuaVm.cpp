@@ -4,14 +4,13 @@
 #include <script/Vm.h>
 #include <iostream>
 #include <string>
-#include <lua.hpp>
 
 namespace sh {
 
 	class World;
 
 	const static luaL_Reg mod_libs[] = {
-		{"Block", openlib_block},
+		{"block", openlib_block},
 	};
 
 	static void *basicAlloc(void * /* ud */, 

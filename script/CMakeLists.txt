@@ -2,6 +2,7 @@
 set(SCRIPT_SOURCES
 	src/lua/LuaVm.cpp
 	src/lua/LibBlock.cpp
+	src/lua/LibWorld.cpp
 	src/lua/Mod.cpp
 	src/Tar.cpp
 )
