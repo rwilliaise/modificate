@@ -1,5 +1,5 @@
 
-#include "script/Mod.h"
+#include "shared/Mod.h"
 
 #include <boost/json.hpp>
 #include <iostream>

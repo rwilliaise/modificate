@@ -1,5 +1,5 @@
 
-#include <world/World.h>
+#include <shared/World.h>
 
 namespace sh {
 

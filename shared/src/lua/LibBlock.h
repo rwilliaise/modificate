@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <world/Block.h>
+#include <shared/Block.h>
 #include <string>
 
 #include <lua.hpp>

@@ -3,7 +3,7 @@
  * Very insecure
  */
 
-#include <script/Mod.h>
+#include <shared/Mod.h>
 #include <iostream>
 #include <cstring>
 #include <string>

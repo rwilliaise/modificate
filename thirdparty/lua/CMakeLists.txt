@@ -14,6 +14,7 @@ set(LUA_HEADERS
 	lua.hpp
 )
 
-file(COPY ${LUA_HEADERS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include)
+set(LUA_HEADER_LOC "${CMAKE_CURRENT_BINARY_DIR}/include")
+file(COPY ${LUA_HEADERS} DESTINATION ${LUA_HEADER_LOC})
 add_library(lua STATIC ${LUA_SOURCES})
-target_include_directories(lua INTERFACE ${LUA_HEADERS})
+target_include_directories(lua INTERFACE ${LUA_HEADER_LOC})

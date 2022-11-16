@@ -1,5 +1,5 @@
 
-#include <world/Chunk.h>
+#include <shared/Chunk.h>
 
 namespace sh {
 

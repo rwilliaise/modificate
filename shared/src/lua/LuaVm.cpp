@@ -1,7 +1,7 @@
 
 #include "LibBlock.h"
 
-#include <script/Vm.h>
+#include <shared/Vm.h>
 #include <iostream>
 #include <string>
 

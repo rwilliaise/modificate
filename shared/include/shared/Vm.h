@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include <world/World.h>
 
+#include "World.h"
 #include "Mod.h" 
 
 namespace sh {

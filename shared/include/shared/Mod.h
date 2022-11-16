@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "world/World.h"
+#include "World.h"
 
 namespace sh {
 
