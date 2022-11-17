@@ -1,9 +1,10 @@
 
-#include "LibBlock.h"
-
 #include <shared/Vm.h>
 #include <iostream>
+#include <lua.hpp>
 #include <string>
+
+#include "LuaWorld.h"
 
 namespace sh {
 
@@ -37,11 +38,7 @@ namespace sh {
 		}, nullptr);
 
 		luaL_openlibs(L);
-
-		for (auto reg : mod_libs) {
-			luaL_requiref(L, reg.name, reg.func, 1);
-			lua_pop(L, -1);
-		}
+		openWorldLib(L, world);
 	}
 
 	void Vm::split(Mod &mod) {

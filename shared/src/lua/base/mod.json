@@ -1,4 +1,5 @@
 {
 	"id": "base",
-	"desc": "The base modificate mod"
+	"name": "Base",
+	"description": "The base Modificate mod"
 }

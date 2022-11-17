@@ -1,7 +1,5 @@
 
 set(SHARED_SOURCES
-	src/lua/LibBlock.cpp
-	src/lua/LibWorld.cpp
 	src/lua/LuaVm.cpp
 	src/lua/Mod.cpp
 	src/Chunk.cpp
