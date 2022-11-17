@@ -9,9 +9,6 @@ namespace sh {
 
 	class World;
 
-	const static luaL_Reg mod_libs[] = {
-		{"block", openlib_block},
-	};
 
 	static void *basicAlloc(void * /* ud */, 
 							void *ptr,
