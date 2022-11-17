@@ -19,7 +19,7 @@ namespace sh {
 		bool setBlock(glm::ivec3 pos, std::string id);
 
 		inline void registerBlock(std::string identifier, Block&& block) {
-			registered.insert({ identifier, block });
+			registered[identifier] = block;
 		}
 
 	private:
