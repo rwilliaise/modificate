@@ -31,6 +31,5 @@ add_subdirectory(thirdparty/lua)
 add_subdirectory(thirdparty/glad)
 
 add_subdirectory(shared)
-
 add_subdirectory(client)
 

@@ -9,8 +9,8 @@
 #include <string>
 #include <memory>
 
-#include <script/Vm.h>
-#include <world/World.h>
+#include <shared/Vm.h>
+#include <shared/World.h>
 #include <lua.hpp>
 
 static void dumpstack (lua_State *L) {

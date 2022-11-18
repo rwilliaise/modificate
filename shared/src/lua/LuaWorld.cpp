@@ -15,18 +15,17 @@ namespace sh {
 	};
 
 	static const char *BLOCK_METATABLE = "block";
-	static const char *BLOCK_GLOBALTABLE = "_BLOCKS";
+	static const char *BLOCK_GLOBALTABLE = "registered";
 
 	static World *getWorld(lua_State *L) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "_WORLD");
+		int idx = lua_upvalueindex(1);
 #ifndef NDEBUG
-		if (!lua_islightuserdata(L, -1)) {
+		if (!lua_islightuserdata(L, idx)) {
 			// if control flow ever gets here: oh no
-			std::cerr << "World access - non light userdata. Hopefully not a cosmic ray." << std::endl;
-			luaL_error(L, "World access: non light userdata. This may be very bad.");
+			luaL_error(L, "world access failure");
 		}
 #endif
-		return static_cast<World *>(lua_touserdata(L, -1));
+		return static_cast<World *>(lua_touserdata(L, idx));
 	}
 
 	static LuaBlock *getBlock(lua_State *L) {
@@ -69,9 +68,41 @@ namespace sh {
 		return true;
 	}
 
+	static void dumpstack (lua_State *L) {
+		std::cout << "current stack: " << std::endl;
+		int top=lua_gettop(L);
+		for (int i=1; i <= top; i++) {
+			printf("%d\t%s\t", i, luaL_typename(L,i));
+			switch (lua_type(L, i)) {
+				case LUA_TNUMBER:
+					printf("%g\n",lua_tonumber(L,i));
+					break;
+				case LUA_TSTRING:
+					printf("%s\n",lua_tostring(L,i));
+					break;
+				case LUA_TBOOLEAN:
+					printf("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
+					break;
+				case LUA_TNIL:
+					printf("%s\n", "nil");
+					break;
+				default:
+					printf("%p\n",lua_topointer(L,i));
+					break;
+			}
+		}
+	}
+
 	static int blockNewIndex(lua_State *L) {
 		LuaBlock *block = getBlock(L);
 		const char *key = luaL_checkstring(L, 2);
+		luaL_argcheck(L, lua_isfunction(L, 3), 3, "expected function");
+		lua_getiuservalue(L, 1, 0);
+
+		int pastTop = lua_gettop(L);
+		lua_pushvalue(L, 3);
+		lua_setfield(L, -2, key);
+		lua_remove(L, -1);
 
 		return true;
 	}
@@ -87,17 +118,21 @@ namespace sh {
 	};
 
 	static int createBlockMeta(lua_State *L) {
-	
+		luaL_newmetatable(L, BLOCK_METATABLE);
+		luaL_setfuncs(L, blockMetaMethods, 0);
+		lua_pop(L, -1);
 
 		return true;
 	}
 
 	static int mountWorldLib(lua_State *L) {
-		luaL_newlib(L, worldMethods);
+		luaL_newlibtable(L, worldMethods);
+		lua_getfield(L, LUA_REGISTRYINDEX, "_WORLD");
+		luaL_setfuncs(L, worldMethods, 1);
 
 		lua_newtable(L); // storage table for block userdatas
-		lua_setfield(L, -1, BLOCK_GLOBALTABLE);
-
+		lua_setfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
+		
 		return true;
 	}
 
@@ -105,6 +140,7 @@ namespace sh {
 		// the lifetime of the world should be longer than the vm... hopefully! :)
 		lua_pushlightuserdata(L, world.get()); 
 		lua_setfield(L, LUA_REGISTRYINDEX, "_WORLD");
+
 		luaL_requiref(L, LIB_WORLDNAME, mountWorldLib, true);
 	}
 } // sh

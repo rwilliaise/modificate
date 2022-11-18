@@ -1,7 +1,6 @@
 
-
 add_executable(test_expect expect.cpp)
-target_link_libraries(test_expect PRIVATE script ${LUA_LIBRARIES})
+target_link_libraries(test_expect PRIVATE shared ${LUA_LIBRARIES})
 target_include_directories(test_expect PRIVATE ${LUA_INCLUDE_DIRS})
 
 function(expect EXPECTED_NAME EXPECTED_FILE)

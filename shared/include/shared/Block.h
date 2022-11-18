@@ -7,7 +7,6 @@
 namespace sh {
 
 	struct Block {
-		std::function<void (glm::ivec3)> placed;
 
 	};
 

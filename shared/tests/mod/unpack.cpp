@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "script/Mod.h"
+#include <shared/Mod.h>
 
 int main(int argc, char *argv[]) {
 	if (argc != 2) {
