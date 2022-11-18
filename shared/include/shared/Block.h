@@ -6,8 +6,15 @@
 
 namespace sh {
 
-	struct Block {
+	enum BlockEvent {
+		BLOCK_EVENT_INIT,
+		BLOCK_EVENT_PLACE,
+		BLOCK_EVENT_BREAK,
+		BLOCK_EVENT_USE,
+	};
 
+	struct Block {
+		std::function<bool (glm::ivec3, BlockEvent)> event;
 	};
 
 	struct BlockEntity {

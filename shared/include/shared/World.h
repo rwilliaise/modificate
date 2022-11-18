@@ -18,10 +18,7 @@ namespace sh {
 
 		bool setBlock(glm::ivec3 pos, std::string id);
 
-		inline void registerBlock(std::string identifier, Block&& block) {
-			registered[identifier] = block;
-		}
-
+		std::unordered_map<std::string, Block> registered;
 	private:
 		friend class Chunk;
 
@@ -29,7 +26,6 @@ namespace sh {
 
 		std::unordered_map<uint16_t, std::string> palette;
 		std::unordered_map<glm::i16vec3, Chunk> chunks;
-		std::unordered_map<std::string, Block> registered;
 	};
 }
 

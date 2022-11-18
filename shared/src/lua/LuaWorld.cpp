@@ -1,7 +1,9 @@
 
 #include "LuaWorld.h"
 #include "lua.h"
+#include "shared/Block.h"
 
+#include <glm/ext/vector_int3.hpp>
 #include <algorithm>
 #include <iostream>
 #include <cstring>
@@ -15,7 +17,12 @@ namespace sh {
 	};
 
 	static const char *BLOCK_METATABLE = "block";
-	static const char *BLOCK_GLOBALTABLE = "registered";
+	static const char *BLOCK_GLOBALTABLE = "_BLOCK";
+
+	static const char *BLOCKEVENT_MAP[] = {
+		"init",
+		"place", "break", "use"
+	};
 
 	static World *getWorld(lua_State *L) {
 		int idx = lua_upvalueindex(1);
@@ -44,60 +51,49 @@ namespace sh {
 		int type = lua_getfield(L, -1, name);
 
 		if (type != LUA_TNIL) {
-			lua_remove(L, -2); // remove global table
-
+			lua_pop(L, 2); // remove global table
 			return true;
 		}
+		lua_pop(L, 1);
 
 		LuaBlock *luaBlock = static_cast<LuaBlock *>(lua_newuserdatauv(L, sizeof(LuaBlock), 1));
 		luaL_setmetatable(L, BLOCK_METATABLE);
 
 		lua_newtable(L);
-		lua_setiuservalue(L, -2, 0);
+		lua_setiuservalue(L, -2, 1);
 
 		Block block;
+		std::string cppName(name);
 
-		std::memcpy(luaBlock->id, name, std::min(static_cast<size_t>(511), std::strlen(name)));
+		block.event = [L, cppName](glm::ivec3 pos, BlockEvent event) {
+			lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
+			lua_getfield(L, 1, cppName.c_str());
+			lua_getiuservalue(L, -1, 1);
+
+			lua_getfield(L, -1, BLOCKEVENT_MAP[event]);
+			if (lua_isfunction(L, -1)) {
+				lua_pushvalue(L, -3);
+				lua_call(L, 1, 0);
+			}
+			
+			return true;
+		};
+
+		std::memcpy(luaBlock->id, name, std::min(static_cast<size_t>(511), std::strlen(name) + 1));
 		luaBlock->block = block;
 		luaBlock->id[511] = 0;
 
-		world->registerBlock(std::string(name), std::move(block));
-
-		lua_setfield(L, -2, name);
+		world->registered[name] = std::move(block);
+		lua_setfield(L, 2, name);
 		
 		return true;
-	}
-
-	static void dumpstack (lua_State *L) {
-		std::cout << "current stack: " << std::endl;
-		int top=lua_gettop(L);
-		for (int i=1; i <= top; i++) {
-			printf("%d\t%s\t", i, luaL_typename(L,i));
-			switch (lua_type(L, i)) {
-				case LUA_TNUMBER:
-					printf("%g\n",lua_tonumber(L,i));
-					break;
-				case LUA_TSTRING:
-					printf("%s\n",lua_tostring(L,i));
-					break;
-				case LUA_TBOOLEAN:
-					printf("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
-					break;
-				case LUA_TNIL:
-					printf("%s\n", "nil");
-					break;
-				default:
-					printf("%p\n",lua_topointer(L,i));
-					break;
-			}
-		}
 	}
 
 	static int blockNewIndex(lua_State *L) {
 		LuaBlock *block = getBlock(L);
 		const char *key = luaL_checkstring(L, 2);
 		luaL_argcheck(L, lua_isfunction(L, 3), 3, "expected function");
-		lua_getiuservalue(L, 1, 0);
+		lua_getiuservalue(L, 1, 1);
 
 		int pastTop = lua_gettop(L);
 		lua_pushvalue(L, 3);
@@ -120,12 +116,14 @@ namespace sh {
 	static int createBlockMeta(lua_State *L) {
 		luaL_newmetatable(L, BLOCK_METATABLE);
 		luaL_setfuncs(L, blockMetaMethods, 0);
-		lua_pop(L, -1);
+		lua_pop(L, 1);
 
 		return true;
 	}
 
 	static int mountWorldLib(lua_State *L) {
+		createBlockMeta(L);
+
 		luaL_newlibtable(L, worldMethods);
 		lua_getfield(L, LUA_REGISTRYINDEX, "_WORLD");
 		luaL_setfuncs(L, worldMethods, 1);
@@ -142,5 +140,6 @@ namespace sh {
 		lua_setfield(L, LUA_REGISTRYINDEX, "_WORLD");
 
 		luaL_requiref(L, LIB_WORLDNAME, mountWorldLib, true);
+		lua_pop(L, -1);
 	}
 } // sh
