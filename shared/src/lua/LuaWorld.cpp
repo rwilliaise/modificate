@@ -10,6 +10,11 @@
 #include <lua.hpp>
 #include <memory>
 
+// temporary fix for failed macosx builds
+#ifdef __APPLE__
+#define luai_likely(cond) (cond)
+#endif
+
 namespace sh {
 
 	struct LuaBlock {

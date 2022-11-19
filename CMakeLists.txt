@@ -11,7 +11,7 @@ find_package(glm REQUIRED)
 find_package(Boost 1.80 REQUIRED COMPONENTS
 			 json)
 
-link_libraries(glm)
+link_libraries(glm::glm)
 link_libraries(Boost::json)
 
 # Personally, I use clangd which the only way to make compatible is to forcefully

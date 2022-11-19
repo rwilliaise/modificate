@@ -13,7 +13,8 @@ pacman -S glm boost
 ```
 
 ```
-brew install boost glm
+brew install glm
+brew install boost
 ```
 
 ```
