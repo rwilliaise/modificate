@@ -32,5 +32,11 @@ cmake ..
 cmake --build .
 ```
 
+On macOS this build is a little different:
+```
+cmake -DCMAKE_CXX_FLAGS="-std=c++17 -stdlib=libc++" ..
+cmake --build .
+```
+
 
 ## Modding
