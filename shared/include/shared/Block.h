@@ -6,6 +6,9 @@
 #include <memory>
 
 namespace sh {
+	class Mod;
+
+	using BasicPositionedEvent = std::function<bool (Mod&, glm::ivec3)>;
 
 	enum BlockEvent {
 		BLOCK_EVENT_INIT,
@@ -15,7 +18,11 @@ namespace sh {
 	};
 
 	struct Block {
-		std::function<bool (std::shared_ptr<void>, glm::ivec3, BlockEvent)> event;
+		std::function<void (Mod&)> init;
+
+		BasicPositionedEvent use;
+		BasicPositionedEvent place;
+		BasicPositionedEvent break_;
 	};
 
 	struct BlockEntity {
@@ -23,3 +30,4 @@ namespace sh {
 		glm::ivec3 pos;
 	};
 }
+

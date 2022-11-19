@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include <unordered_map>
 
 #include "World.h"
@@ -33,6 +34,10 @@ namespace sh {
 		bool open(std::string mem, std::string filename);
 
 		void tar_loadFromMemory(std::vector<char> mem);
+
+		inline void *get() {
+			return context.get();
+		}
 
 		std::unordered_map<std::string, std::vector<char>> vfs;
 

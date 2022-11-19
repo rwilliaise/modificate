@@ -10,6 +10,8 @@
 #include <memory>
 
 #include <shared/Vm.h>
+#include <shared/Block.h>
+#include <shared/Chunk.h>
 #include <shared/World.h>
 #include <lua.hpp>
 

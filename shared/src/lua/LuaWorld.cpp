@@ -1,7 +1,7 @@
 
-#include "LuaWorld.h"
-#include "lua.h"
 #include "shared/Block.h"
+#include "shared/Mod.h"
+#include "LuaWorld.h"
 
 #include <glm/ext/vector_int3.hpp>
 #include <algorithm>
@@ -20,11 +20,6 @@ namespace sh {
 	static const char *BLOCK_METATABLE = "block";
 	static const char *BLOCK_GLOBALTABLE = "_BLOCK";
 
-	static const char *BLOCKEVENT_MAP[] = {
-		"init",
-		"place", "break", "use"
-	};
-
 	static World *getWorld(lua_State *L) {
 		int idx = lua_upvalueindex(1);
 #ifndef NDEBUG
@@ -38,6 +33,33 @@ namespace sh {
 
 	static LuaBlock *getBlock(lua_State *L) {
 		return static_cast<LuaBlock *>(luaL_checkudata(L, 1, BLOCK_METATABLE));
+	}
+
+	static void pushBlockTable(Mod& mod, std::string& name, const char *eventName, int nargs) {
+			lua_State *L = static_cast<lua_State *>(mod.get());
+
+			lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
+			lua_getfield(L, 1, name.c_str());
+			lua_getiuservalue(L, -1, 1);
+
+			lua_getfield(L, -1, eventName);
+			if (lua_isfunction(L, -1)) {
+				lua_newtable(L);
+				lua_pushstring(L, name.c_str());
+				lua_setfield(L, -2, "id");
+
+				for (int i = 1; i <= nargs; i++) {
+					lua_pushvalue(L, i);
+				}
+
+				lua_call(L, nargs + 1, 0);
+			}
+	}
+
+	static void initBlockEvents(Block& block, std::string name) {
+		block.init = [&](Mod& mod) {
+			pushBlockTable(mod, name, "init", 0);
+		};
 	}
 
 	static int block(lua_State *L) {
@@ -64,26 +86,7 @@ namespace sh {
 		lua_setiuservalue(L, -2, 1);
 
 		Block block;
-		std::string cppName(name);
-
-		block.event = [cppName](std::shared_ptr<void> state, glm::ivec3 pos, BlockEvent event) {
-			lua_State *L = static_cast<lua_State *>(state.get());
-
-			lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
-			lua_getfield(L, 1, cppName.c_str());
-			lua_getiuservalue(L, -1, 1);
-
-			lua_getfield(L, -1, BLOCKEVENT_MAP[event]);
-			if (lua_isfunction(L, -1)) {
-				lua_pushvalue(L, -3);
-				lua_call(L, 1, 0);
-			}
-			
-			return true;
-		};
-
-		std::cout << (block.event ? "true" : "false") << std::endl;
-
+		initBlockEvents(block, std::string(name));
 		std::memcpy(luaBlock->id, name, std::min(static_cast<size_t>(511), std::strlen(name) + 1));
 		luaBlock->block = block;
 		luaBlock->id[511] = 0;

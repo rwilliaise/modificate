@@ -1,5 +1,6 @@
 
 #include <shared/World.h>
+#include <shared/Chunk.h>
 
 namespace sh {
 

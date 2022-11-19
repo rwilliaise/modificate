@@ -1,6 +1,7 @@
 
 #pragma once 
 
+#include <map>
 #include <unordered_map>
 #include <cstdint>
 #include <string>
@@ -8,9 +9,8 @@
 #include <glm/ext/vector_int3.hpp>
 #include <glm/gtx/hash.hpp>
 
-#include "Block.h"
-
 namespace sh {
+	class Block;
 	class Chunk;
 
 	class World {
@@ -18,7 +18,7 @@ namespace sh {
 
 		bool setBlock(glm::ivec3 pos, std::string id);
 
-		std::unordered_map<std::string, Block> registered;
+		std::map<std::string, Block> registered;
 	private:
 		friend class Chunk;
 
@@ -29,4 +29,3 @@ namespace sh {
 	};
 }
 
-#include "Chunk.h"
