@@ -4,9 +4,8 @@ set(CLIENT_SOURCES
 
 	# render
 	render/Display.cpp
+	render/Mesh.cpp
 )
-
-find_package(glfw3 REQUIRED)
 
 if(WIN32)
 	add_executable(client WIN32 ${CLIENT_SOURCES})

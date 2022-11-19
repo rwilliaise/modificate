@@ -9,11 +9,15 @@ I use a full CMake buildsystem since I develop on both a Windows and Arch Linux 
 First install the required packages:
 
 ```
-pacman -S glm glfw boost
+pacman -S glm boost
 ```
 
 ```
-vcpkg install glfw3:x64-windows-static glm:x64-windows-static boost-json:x64-windows-static
+brew install boost glm
+```
+
+```
+vcpkg install glm:x64-windows-static boost-json:x64-windows-static
 ```
 
 All other required packages are in `thirdparty/`

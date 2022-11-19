@@ -23,11 +23,17 @@ if(WIN32 AND NOT VCPKG_TARGET_TRIPLET) # no vcpkg installed
 		message(STATUS "MSYS detected, using MSYS include dirs")
 		set(MSYS_ENV $ENV{MSYSTEM})
 		include_directories("${MSYS_INSTALL_PATH}/${MSYS_ENV}/include")
-		add_compile_options(-target x86_64-pc-windows-gnu)
+		# add_compile_options(-target x86_64-pc-windows-gnu)
+		add_link_options(-static -static-libgcc -static-libstdc++)
 	endif()
 endif()
 
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
 add_subdirectory(thirdparty/lua)
+add_subdirectory(thirdparty/glfw)
 add_subdirectory(thirdparty/glad)
 
 add_subdirectory(shared)

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <world/Chunk.h>
+#include <shared/Chunk.h>
 
 #include "Render.h"
 
