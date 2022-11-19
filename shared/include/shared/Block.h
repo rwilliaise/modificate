@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include <functional>
 #include <glm/ext/vector_int3.hpp>
+#include <functional>
+#include <memory>
 
 namespace sh {
 
@@ -14,7 +15,7 @@ namespace sh {
 	};
 
 	struct Block {
-		std::function<bool (glm::ivec3, BlockEvent)> event;
+		std::function<bool (std::shared_ptr<void>, glm::ivec3, BlockEvent)> event;
 	};
 
 	struct BlockEntity {

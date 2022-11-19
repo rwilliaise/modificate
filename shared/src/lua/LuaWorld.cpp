@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstring>
 #include <lua.hpp>
+#include <memory>
 
 namespace sh {
 
@@ -65,7 +66,9 @@ namespace sh {
 		Block block;
 		std::string cppName(name);
 
-		block.event = [L, cppName](glm::ivec3 pos, BlockEvent event) {
+		block.event = [cppName](std::shared_ptr<void> state, glm::ivec3 pos, BlockEvent event) {
+			lua_State *L = static_cast<lua_State *>(state.get());
+
 			lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
 			lua_getfield(L, 1, cppName.c_str());
 			lua_getiuservalue(L, -1, 1);
@@ -79,11 +82,13 @@ namespace sh {
 			return true;
 		};
 
+		std::cout << (block.event ? "true" : "false") << std::endl;
+
 		std::memcpy(luaBlock->id, name, std::min(static_cast<size_t>(511), std::strlen(name) + 1));
 		luaBlock->block = block;
 		luaBlock->id[511] = 0;
 
-		world->registered[name] = std::move(block);
+		world->registered[name] = block;
 		lua_setfield(L, 2, name);
 		
 		return true;
