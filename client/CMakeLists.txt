@@ -15,5 +15,9 @@ else()
 	add_executable(client ${CLIENT_SOURCES})
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	target_link_options(client PRIVATE -static-libgcc -static-libstdc++)
+endif()
+
 target_link_libraries(client PRIVATE glfw glad shared)
 

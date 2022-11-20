@@ -11,7 +11,12 @@ find_package(glm REQUIRED)
 find_package(Boost 1.80 REQUIRED COMPONENTS
 			 json)
 
-link_libraries(glm::glm)
+if (APPLE)
+	link_libraries(glm::glm)
+else()
+	link_libraries(glm)
+endif()
+
 link_libraries(Boost::json)
 
 # Personally, I use clangd which the only way to make compatible is to forcefully
@@ -23,8 +28,10 @@ if(WIN32 AND NOT VCPKG_TARGET_TRIPLET) # no vcpkg installed
 		message(STATUS "MSYS detected, using MSYS include dirs")
 		set(MSYS_ENV $ENV{MSYSTEM})
 		include_directories("${MSYS_INSTALL_PATH}/${MSYS_ENV}/include")
-		# add_compile_options(-target x86_64-pc-windows-gnu)
-		add_link_options(-static -static-libgcc -static-libstdc++)
+		if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+			add_compile_options(--target=x86_64-w64-mingw32)
+			add_link_options(-static -static-libgcc -static-libstdc++ -Wl,--allow-multiple-definition)
+		endif()
 	endif()
 endif()
 

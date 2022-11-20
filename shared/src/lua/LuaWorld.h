@@ -1,5 +1,6 @@
 
 #include "shared/World.h"
+#include <memory>
 #include <lua.hpp>
 
 namespace sh {

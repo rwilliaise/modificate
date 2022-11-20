@@ -44,7 +44,6 @@ namespace sh {
 	void Vm::split(Mod &mod) {
 		if (mod.context != nullptr)
 			std::cout << "WARNING: Mod VM already split - this may be very bad" << std::endl;
-		std::cout << "Split mod state" << std::endl;
 		mod.context = std::shared_ptr<void>(lua_newthread(getState(*this)), [](void *) {});
 	}
 } // sh

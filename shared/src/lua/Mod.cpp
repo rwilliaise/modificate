@@ -23,7 +23,7 @@ namespace sh {
 	}
 
 	bool Mod::open(std::string str, std::string name) {
-		lua_State *L = static_cast<lua_State*>(context.get());
+		lua_State *L = static_cast<lua_State *>(context.get());
 		lua_pushfstring(L, "@%s", name.c_str()); // make stacktraces treat name like a filename
 		luaL_loadbuffer(L, str.c_str(), str.length(), lua_tostring(L, -1));
 		lua_remove(L, -2);
