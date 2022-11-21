@@ -57,6 +57,25 @@ namespace sh {
 		{nullptr, nullptr},
 	};
 
+	static const luaL_Reg vectorMethods[] = {
+		{"dot", BINARY_OP({
+			lua_pushnumber(L, glm::dot(v1, v2));
+		})},
+		{"distance", BINARY_OP({
+			lua_pushnumber(L, glm::distance(v1, v2));
+		})},
+		{"cross", BINARY_OP({
+			pushVector(L, glm::cross(v1, v2));
+		})},
+		{"normalize", UNARY_OP({
+			pushVector(L, glm::normalize(v1));
+		})},
+		{"length", UNARY_OP({
+			lua_pushnumber(L, glm::length(v1));
+		})},
+		{nullptr, nullptr},
+	};
+
 	glm::vec3 getVector(lua_State *L, int idx) {
 		if (lua_type(L, idx) != LUA_TTABLE && lua_type(L, idx) != LUA_TNUMBER) {
 			luaL_error(L, "got %s, expected vector or number", lua_typename(L, lua_type(L, idx)));
@@ -131,6 +150,12 @@ namespace sh {
 
 		lua_pushliteral(L, "vector");
 		lua_setfield(L, -2, "__name");
+
+		luaL_newlib(L, vectorMethods);
+		lua_setfield(L, -2, "__index");
+
+		lua_pushstring(L, VECTOR_METATABLE);
+		lua_setfield(L, -2, "__metatable");
 
 		return true;
 	}
