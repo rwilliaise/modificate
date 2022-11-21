@@ -9,6 +9,9 @@
 #include "World.h"
 
 namespace sh {
+	class Vm;
+
+	void loadMods(Vm& vm, std::string folder);
 
 	/**
 	 * Represents one mod.

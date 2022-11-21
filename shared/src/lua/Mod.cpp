@@ -1,11 +1,22 @@
 
-#include "shared/Mod.h"
+#include <shared/Mod.h>
+#include <shared/Vm.h>
 
 #include <boost/json.hpp>
 #include <iostream>
 #include <lua.hpp>
+#include <filesystem>
 
 namespace sh {
+
+	void loadMods(Vm &vm, std::string folder) {
+		std::filesystem::path folderPath(folder);
+		for (const auto &child : std::filesystem::directory_iterator(folderPath)) {
+			if (child.is_regular_file()) {
+				child.path().string();
+			}
+		}
+	}
 
 	bool Mod::mount(std::shared_ptr<World> world) {
 		if (context == nullptr) {
