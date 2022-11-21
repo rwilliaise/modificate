@@ -19,7 +19,7 @@ namespace sh {
 
 	struct LuaBlock {
 		char id[512];
-		Block& block;
+		Block* block;
 	};
 
 	static const char *BLOCK_METATABLE = "block";
@@ -93,10 +93,10 @@ namespace sh {
 		Block block;
 		initBlockEvents(block, std::string(name));
 		std::memcpy(luaBlock->id, name, std::min(static_cast<size_t>(511), std::strlen(name) + 1));
-		luaBlock->block = block;
 		luaBlock->id[511] = 0;
 
-		world->registered[name] = block;
+		world->registered[name] = std::move(block);
+		luaBlock->block = &world->registered[name];
 		lua_setfield(L, 2, name);
 		
 		return true;
@@ -116,12 +116,12 @@ namespace sh {
 		return true;
 	}
 
-	const luaL_Reg worldMethods[] = {
+	static const luaL_Reg worldMethods[] = {
 		{"block", block},
 		{nullptr, nullptr},
 	};
 
-	const luaL_Reg blockMetaMethods[] = {
+	static const luaL_Reg blockMetaMethods[] = {
 		{"__newindex", blockNewIndex},
 		{nullptr, nullptr},
 	};

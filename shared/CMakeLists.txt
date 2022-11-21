@@ -2,6 +2,7 @@
 set(SHARED_SOURCES
 	src/lua/LuaVm.cpp
 	src/lua/LuaWorld.cpp
+	src/lua/LuaVector.cpp
 	src/lua/Mod.cpp
 	src/Chunk.cpp
 	src/Tar.cpp

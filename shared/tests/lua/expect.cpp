@@ -40,13 +40,19 @@ static void dumpstack (lua_State *L) {
 	}
 }
 
+int luaExit(lua_State *L) {
+	int code = luaL_checkinteger(L, 1);
+	std::cout << "Exiting with code " << code << std::endl;
+	exit(code);
+}
+
 int main(int argc, char *argv[]) {
 	if (argc != 2) {
 		std::cerr << "Usage: expect [FILE]" << std::endl;
 		return 1;
 	}
 	std::stringstream str;
-	std::ifstream file(argv[1]);
+	std::ifstream file(argv[1], std::ios::binary);
 	str << file.rdbuf();
 	file.close();
 
@@ -63,11 +69,23 @@ int main(int argc, char *argv[]) {
 	std::cout << "\"\"\"" << std::endl;
 	std::cout << std::endl;
 
+	lua_State *L = static_cast<lua_State *>(vm.get());
+
+	lua_pushglobaltable(L);
+	lua_pushcfunction(L, luaExit);
+	lua_setfield(L, -2, "exit");
+	lua_pop(L, 1);
+
 	std::string srcFile = std::string(argv[1]);
 	std::string filename = srcFile.substr(srcFile.find_last_of("/\\") + 1);
 	bool result = test.open(out, filename);
 	
-	lua_State *L = (lua_State *) vm.get();
 	dumpstack(L);
-	return (result && lua_toboolean(L, 1)) ? 0 : 1;
+	int code = !(result && lua_toboolean(L, 1));
+
+	std::cout << "No errors: " << (result ? "true" : "false") << std::endl;
+	std::cout << "Returned value: " << (lua_toboolean(L, 1) ? "true" : "false") << std::endl;
+	std::cout << "Final code: " << code << std::endl;
+
+	return code;
 }

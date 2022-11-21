@@ -4,6 +4,7 @@
 #include <lua.hpp>
 #include <string>
 
+#include "LuaVector.h"
 #include "LuaWorld.h"
 
 namespace sh {
@@ -39,6 +40,7 @@ namespace sh {
 
 		luaL_openlibs(L);
 		openWorldLib(L, world);
+		openVectorLib(L);
 	}
 
 	void Vm::split(Mod &mod) {

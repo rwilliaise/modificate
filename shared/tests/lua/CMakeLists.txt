@@ -10,5 +10,6 @@ endfunction()
 
 expect("expect file loading" expect.lua)
 expect("Block: .new()" block.lua)
+expect("Vector math" vector.lua)
 
 
