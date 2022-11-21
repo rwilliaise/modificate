@@ -10,13 +10,28 @@ local function expect(result)
 	end
 end
 
+local function round(num, numDecimalPlaces)
+  local mult = 10 ^ (numDecimalPlaces or 0)
+  return math.floor(num * mult + 0.5) / mult
+end
+
 expect(ZERO ~= TEST_VECTOR)
 expect(ZERO * TEST_VECTOR == ZERO)
 expect(TEST_VECTOR.x == 1)
 
 expect(#(vector(0, 1, 0)) == 1)
+expect(#TEST_VECTOR == #vector(3, 2, 1))
+expect(#(ZERO - UP) == ZERO:distance(UP))
+expect(round(#TEST_VECTOR:normalize(), 5) == 1) -- darn you IEEE-754
 
-expect(vector(1, 2, 4) // vector(2, 2, 2) == vector(0, 1, 2))
+local RIGHT = vector(1, 0, 0)
+local FORWARD = vector(0, 0, -1)
+
+expect(RIGHT:cross(FORWARD) == UP)
+expect(RIGHT:dot(FORWARD) == 0)
+expect(RIGHT:dot(FORWARD) == RIGHT:dot(UP))
+
+expect(vector(1, 2, 4) // 2 == vector(0, 1, 2))
 expect(UP + 3 == vector(3, 4, 3))
 expect(UP * 3 == vector(0, 3, 0))
 
