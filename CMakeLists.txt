@@ -10,7 +10,6 @@ find_package(glm REQUIRED)
 find_package(Boost 1.80 REQUIRED COMPONENTS
 			 json)
 
-set_property(GLOBAL PROPERTY CXX_STANDARD 17)
 
 if (APPLE)
 	link_libraries(glm::glm)

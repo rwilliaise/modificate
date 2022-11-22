@@ -43,10 +43,11 @@ namespace sh {
 		openVectorLib(L);
 	}
 
-	void Vm::split(Mod &mod) {
+	void Vm::split(Mod &&mod) {
 		if (mod.context != nullptr)
 			std::cout << "WARNING: Mod VM already split - this may be very bad" << std::endl;
 		mod.context = std::shared_ptr<void>(lua_newthread(getState(*this)), [](void *) {});
+		mods.push_back(std::forward<Mod>(mod));
 	}
 } // sh
 
