@@ -31,3 +31,5 @@ namespace sh {
 	};
 }
 
+#include "Block.h"
+#include "Chunk.h"

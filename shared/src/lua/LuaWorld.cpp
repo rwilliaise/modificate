@@ -1,6 +1,10 @@
 
-#include "shared/Block.h"
-#include "shared/Mod.h"
+#include <shared/Block.h>
+#include <shared/Chunk.h>
+#include <shared/World.h>
+#include <shared/Vm.h>
+#include <shared/Mod.h>
+
 #include "LuaWorld.h"
 
 #include <glm/ext/vector_int3.hpp>

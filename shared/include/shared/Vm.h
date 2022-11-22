@@ -33,6 +33,7 @@ namespace sh {
 		 * Split global context into another smaller context (mod).
 		 */
 		void split(Mod &&mod);
+		void split(Mod &mod);
 
 	private:
 		std::shared_ptr<void> global;
