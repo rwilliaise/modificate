@@ -1,5 +1,7 @@
 
 #include "Mesh.h"
+
+#include <nmmintrin.h>
 #include <glad/gl.h>
 
 namespace r {
@@ -12,5 +14,17 @@ namespace r {
 	Mesh::~Mesh() {
 		glDeleteBuffers(3, buffers);
 		glDeleteVertexArrays(1, &vao);
+	}
+
+	bool Mesh::update(sh::Chunk &chunk) {
+		const auto &palette = chunk.getWorld();
+		
+#ifdef R_SIMD_ENABLED
+		// TODO
+#else
+
+#endif
+
+		return true;
 	}
 } // r

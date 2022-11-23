@@ -1,6 +1,11 @@
 
 #pragma once
 
+#if defined(__i386__) || defined(__x86_64__)
+#define R_SIMD_ENABLED
+#include <nmmintrin.h>
+#endif
+
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>

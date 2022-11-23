@@ -17,6 +17,8 @@ namespace sh {
 	public:
 		bool setBlock(glm::u8vec3 pos, std::string identifier);
 
+		inline auto getWorld() { return world; }
+
 	private:
 		friend class World;
 
