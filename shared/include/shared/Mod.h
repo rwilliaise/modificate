@@ -9,6 +9,9 @@
 #include "World.h"
 
 namespace sh {
+	class Vm;
+
+	void loadMods(Vm& vm, std::string folder);
 
 	/**
 	 * Represents one mod.
@@ -16,6 +19,8 @@ namespace sh {
 	class Mod {
 	public:
 
+		// move only
+		
 		Mod() = default;
 		Mod(const Mod&) = delete;
 		Mod(Mod&&) = default;
@@ -35,8 +40,12 @@ namespace sh {
 
 		void tar_loadFromMemory(std::vector<char> mem);
 
-		inline void *get() {
+		inline void *get() const {
 			return context.get();
+		}
+
+		inline const auto& getId() const {
+			return id;
 		}
 
 		std::unordered_map<std::string, std::vector<char>> vfs;
@@ -44,6 +53,7 @@ namespace sh {
 	private:
 		friend class Vm;
 		
+		std::string id;
 		std::shared_ptr<void> context;
 	};
 }

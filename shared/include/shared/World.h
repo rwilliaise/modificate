@@ -1,10 +1,11 @@
 
 #pragma once 
 
-#include <map>
 #include <unordered_map>
 #include <cstdint>
 #include <string>
+#include <memory>
+#include <map>
 
 #include <glm/ext/vector_int3.hpp>
 #include <glm/gtx/hash.hpp>
@@ -13,8 +14,9 @@ namespace sh {
 	class Block;
 	class Chunk;
 
-	class World {
+	class World : public std::enable_shared_from_this<World> {
 	public:
+		World() {}
 
 		bool setBlock(glm::ivec3 pos, std::string id);
 
@@ -29,3 +31,5 @@ namespace sh {
 	};
 }
 
+#include "Block.h"
+#include "Chunk.h"

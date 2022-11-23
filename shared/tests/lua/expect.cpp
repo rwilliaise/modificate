@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
 
 	std::shared_ptr<sh::World> world = std::make_shared<sh::World>();
 	sh::Vm vm(world);
+	
 	sh::Mod test;
 	vm.split(test);
 

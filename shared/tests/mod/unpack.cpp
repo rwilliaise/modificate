@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
 			std::cout << pair.first << ":\t\t\"" << std::string(pair.second.data(), pair.second.size()).c_str() << "\"" << std::endl;
 		}
 		
-		auto testLua = mod.vfs.find("test.lua");
-		if (testLua == mod.vfs.end()) {
+		auto modJson = mod.vfs.find("mod.json");
+		if (modJson == mod.vfs.end()) {
 			return 1;
 		}
 
@@ -38,4 +38,5 @@ int main(int argc, char *argv[]) {
 	} catch (std::exception& e) {
 		std::cerr << argv[1] << ": " << e.what() << std::endl;
 	}
+	return 1;
 }

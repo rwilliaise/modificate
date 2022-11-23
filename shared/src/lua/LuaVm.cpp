@@ -1,11 +1,15 @@
 
-#include <shared/Vm.h>
 #include <iostream>
 #include <lua.hpp>
 #include <string>
 
 #include "LuaVector.h"
 #include "LuaWorld.h"
+
+#include <shared/Block.h>
+#include <shared/Chunk.h>
+#include <shared/World.h>
+#include <shared/Vm.h>
 
 namespace sh {
 
@@ -41,6 +45,11 @@ namespace sh {
 		luaL_openlibs(L);
 		openWorldLib(L, world);
 		openVectorLib(L);
+	}
+
+	void Vm::split(Mod &&mod) {
+		split(mod);
+		mods.push_back(std::forward<Mod>(mod));
 	}
 
 	void Vm::split(Mod &mod) {

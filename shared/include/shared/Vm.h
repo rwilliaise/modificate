@@ -21,14 +21,25 @@ namespace sh {
 			return global.get();
 		}
 
+		inline auto getWorld() { 
+			return world;
+		}
+
+		inline const auto& getMods() {
+			return mods;
+		}
+
 		/**
 		 * Split global context into another smaller context (mod).
 		 */
-		void split(Mod& mod);
+		void split(Mod &&mod);
+		void split(Mod &mod);
 
 	private:
 		std::shared_ptr<void> global;
 		std::shared_ptr<World> world;
+
+		std::vector<Mod> mods;
 	};
 
 } // sh
