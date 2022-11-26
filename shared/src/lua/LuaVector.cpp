@@ -1,7 +1,6 @@
 
 #include "LuaVector.h"
 
-#include <iostream>
 #include <glm/geometric.hpp>
 
 #define BINARY_OP(op) [](lua_State *L) { 	\

@@ -19,5 +19,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	target_link_options(client PRIVATE -static-libgcc -static-libstdc++)
 endif()
 
+set_property(TARGET client PROPERTY CXX_STANDARD 17)
+set_property(TARGET client PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(client PRIVATE glfw glad shared)
 

@@ -1,3 +1,6 @@
+/**
+ * Loads mod.tar and makes sure that mod.json is found
+ */
 
 #include <exception>
 #include <iterator>

@@ -1,3 +1,6 @@
+/**
+ * Load the ./tar directory and load valid mods inside the directory.
+ */
 
 #include <iostream>
 #include <memory>

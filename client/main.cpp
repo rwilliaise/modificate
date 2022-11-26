@@ -1,9 +1,20 @@
 
-#include "glad/gl.h"
 #include "render/Display.h"
-#include <iostream>
+#include <shared/Vm.h>
 
-static inline int start() {
+#include <filesystem>
+#include <iostream>
+#include <cstring>
+#include <cctype>
+#include <memory>
+#include <string>
+
+struct Args {
+	char *modsFolder;
+
+};
+
+static inline int start(int argc, char *argv[]) {
 	glfwSetErrorCallback([](int code, const char *desc) {
 		std::cerr << "GLFW ERROR (" << code << "): " << desc << std::endl;
 	});
@@ -11,6 +22,32 @@ static inline int start() {
 	if (glfwInit() == GLFW_FALSE) {
 		return 1;
 	}
+
+
+	Args args;
+	char state = ' ';
+	for (int i = 0; i < argc; i++) {
+		std::string arg(argv[i]);
+		
+		switch (state) {
+		case 'm':
+			state = ' ';
+			args.modsFolder = argv[i];
+			std::cout << "modsFolder = " << args.modsFolder << std::endl;
+			break;
+		}
+
+		if (arg == "--mods" || arg == "-m") {
+			state = 'm';
+		}
+	}
+
+	auto modsFolderPath = std::filesystem::absolute(args.modsFolder);
+
+	std::shared_ptr<sh::World> world;
+
+	sh::Vm vm(world);
+	sh::loadMods(vm, modsFolderPath);
 
 	r::Display display;
 
@@ -29,15 +66,49 @@ static inline int start() {
 
 int WinMain(HINSTANCE /* inst */,
 			HINSTANCE /* preInst */,
-			LPSTR /* args */,
+			LPSTR args,
 			int /* shown */) {
-	return start();
+
+	size_t pos;
+	std::vector<char *> argv;
+
+	char state = ' ';
+	char *word = args;
+	for (char *curr = args; *curr != 0; curr++) {
+		switch (state) {
+		case ' ':
+			if (*curr == '"') {
+				state = '"';
+				word = ++curr;
+			} else if (std::isspace(*curr)) {
+				argv.push_back(word);
+				*curr = 0;
+				word = ++curr;
+			}
+			break;
+		case '"':
+			if (*curr == '"') {
+				*curr = 0;
+				curr += 2; // one space after the quote
+				 
+				argv.push_back(word);
+				word = curr;
+
+				state = ' ';
+			}
+			break;
+		}
+		
+	}
+	argv.push_back(word);
+	
+	return start(argv.size(), argv.data());
 }
 
 #else
 
 int main(int argc, char* argv[]) {
-	return start();
+	return start(argc, argv);
 }
 
 #endif

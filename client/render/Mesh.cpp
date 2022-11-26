@@ -1,7 +1,6 @@
 
 #include "Mesh.h"
 
-#include <nmmintrin.h>
 #include <glad/gl.h>
 
 namespace r {
