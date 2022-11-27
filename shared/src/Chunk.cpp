@@ -17,6 +17,7 @@ namespace sh {
 				break;
 			}
 		}
+		
 
 		if (palette == UINT16_MAX) {
 			palette = world->next;

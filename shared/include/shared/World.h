@@ -20,6 +20,8 @@ namespace sh {
 
 		bool setBlock(glm::ivec3 pos, std::string id);
 
+		inline const auto &getPalette() { return palette; }
+
 		std::map<std::string, Block> registered;
 	private:
 		friend class Chunk;

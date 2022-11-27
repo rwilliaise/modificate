@@ -18,6 +18,9 @@ namespace sh {
 		bool setBlock(glm::u8vec3 pos, std::string identifier);
 
 		inline auto getWorld() { return world; }
+		inline auto getBlock(size_t x, size_t y, size_t z) {
+			return blocks[x][y][z];
+		}
 
 	private:
 		friend class World;

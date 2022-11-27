@@ -10,16 +10,7 @@ namespace sh {
 
 	using BasicPositionedEvent = std::function<bool (Mod&, glm::ivec3)>;
 
-	enum BlockEvent {
-		BLOCK_EVENT_INIT,
-		BLOCK_EVENT_PLACE,
-		BLOCK_EVENT_BREAK,
-		BLOCK_EVENT_USE,
-	};
-
 	struct Block {
-		std::function<void (Mod&)> init;
-
 		BasicPositionedEvent use;
 		BasicPositionedEvent place;
 		BasicPositionedEvent break_;
