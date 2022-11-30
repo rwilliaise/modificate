@@ -6,6 +6,7 @@
 #include <shared/Mod.h>
 
 #include "LuaWorld.h"
+#include "LuaVector.h"
 
 #include <glm/ext/vector_int3.hpp>
 #include <algorithm>
@@ -13,11 +14,6 @@
 #include <cstring>
 #include <lua.hpp>
 #include <memory>
-
-// temporary fix for failed macosx builds
-#ifdef __APPLE__
-#define luai_likely(cond) (cond)
-#endif
 
 namespace sh {
 
@@ -65,25 +61,44 @@ namespace sh {
 			}
 	}
 
-	static void initBlockEvents(Block& block, std::string name) {
-		block.init = [&](Mod& mod) {
-			pushBlockTable(mod, name, "init", 0);
+	static int pushBlock(lua_State *L, const char *name) {
+		lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
+		return lua_getfield(L, -1, name);
+	}
+
+	static BasicPositionedEvent createBasicPositionedEvent(std::string name, std::string event) {
+		return [&](Mod& mod, glm::ivec3 pos) {
+			lua_State *L = static_cast<lua_State *>(mod.get()); 
+			pushBlock(L, name.c_str());
+			lua_newtable(L);
+
+			pushVector(L, pos);
+			lua_setfield(L, -2, "pos");
+
+			lua_pushstring(L, name.c_str());
+			lua_setfield(L, -2, "id");
+
+			lua_getfield(L, -2, event.c_str());
+			int result = lua_pcall(L, 1, 1, 0);
+			return result == LUA_OK && lua_toboolean(L, -1);
 		};
+	}
+
+	static void initBlockEvents(Block& block, std::string name) {
+		block.break_ = createBasicPositionedEvent(name, "break");
+		block.place = createBasicPositionedEvent(name, "place");
+		block.use = createBasicPositionedEvent(name, "use");
 	}
 
 	static int block(lua_State *L) {
 		World *world = getWorld(L);
 		const char *name = luaL_checkstring(L, 1);
 
-		if (name == NULL) {
-			luaL_argerror(L, 1, "expected string");
-		}
-
 		lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
 		int type = lua_getfield(L, -1, name);
 
 		if (type != LUA_TNIL) {
-			lua_pop(L, 2); // remove global table
+			lua_remove(L, 2); // remove global table
 			return true;
 		}
 		lua_pop(L, 1);
@@ -102,6 +117,7 @@ namespace sh {
 		world->registered[name] = std::move(block);
 		luaBlock->block = &world->registered[name];
 		lua_setfield(L, 2, name);
+		lua_pop(L, 1);
 		
 		return true;
 	}

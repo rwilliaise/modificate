@@ -2,7 +2,7 @@
 
 local TestBlock = world.block("test")
 
-function TestBlock:placed()
+function TestBlock:place()
 	print("Hello, world!")
 end
 

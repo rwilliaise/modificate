@@ -47,7 +47,7 @@ static inline int start(int argc, char *argv[]) {
 	std::shared_ptr<sh::World> world;
 
 	sh::Vm vm(world);
-	sh::loadMods(vm, modsFolderPath);
+	sh::loadMods(vm, modsFolderPath.string());
 
 	r::Display display;
 
