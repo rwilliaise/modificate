@@ -17,7 +17,7 @@ namespace r {
 		glm::ivec4(-1, 0, 0, 0), glm::ivec4(0, -1, 0, 0), glm::ivec4(0, 0, -1, 0), // east, down, south 
 	};
 
-	struct alignas(32) Vertex {
+	struct Vertex {
 		glm::vec3 pos;
 		glm::vec2 uv;
 	};
@@ -94,18 +94,15 @@ namespace r {
 							auto neighbor = chunk.getBlock(vec.x, vec.y, vec.z);
 #endif
 							
+							// TODO: check the solidity of blocks
 							if (neighbor == sh::AIR_BLOCK) { 
-								// TODO: other non-solid blocks?
 								data.reserve(data.size() + 4); // 4 verts
 
-
-								for (const glm::vec3& offset) {
-									// I could probably lay out the SIDES array in a smarter and far more optimized way,
-									// however, this solution works. If it is not broken, I will not fix it. Ignore the
-									// fact that I am using SIMD up there but not down here. This should auto-vectorize
-									// however, so it's a negligible loss.
+								for (int j = 0; j < SIDES->length(); j++) {
 									glm::vec3 pSide = glm::vec3(side);
 									glm::vec3 offset = SIDES[j];
+									// TODO: there is a better way to do this, considering the SIDES table could be laid
+									// out better
 									if (glm::abs(pSide) == glm::abs(offset)) { continue; }
 									data.push_back(Vertex {
 										.pos = static_cast<glm::vec3>(pos) + glm::cross(pSide, offset) * 0.5f + pSide * 0.5f

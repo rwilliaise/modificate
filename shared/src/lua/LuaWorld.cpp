@@ -91,7 +91,6 @@ namespace sh {
 	}
 
 	static int block(lua_State *L) {
-		World *world = getWorld(L);
 		const char *name = luaL_checkstring(L, 1);
 
 		lua_getfield(L, LUA_REGISTRYINDEX, BLOCK_GLOBALTABLE);
@@ -102,6 +101,7 @@ namespace sh {
 			return true;
 		}
 		lua_pop(L, 1);
+		lua_remove(L, 1);
 
 		LuaBlock *luaBlock = static_cast<LuaBlock *>(lua_newuserdatauv(L, sizeof(LuaBlock), 1));
 		luaL_setmetatable(L, BLOCK_METATABLE);
@@ -114,9 +114,11 @@ namespace sh {
 		std::memcpy(luaBlock->id, name, std::min(static_cast<size_t>(511), std::strlen(name) + 1));
 		luaBlock->id[511] = 0;
 
+		World *world = getWorld(L);
 		world->registered[name] = std::move(block);
 		luaBlock->block = &world->registered[name];
-		lua_setfield(L, 2, name);
+
+		lua_setfield(L, 1, name);
 		lua_pop(L, 1);
 		
 		return true;
@@ -125,10 +127,10 @@ namespace sh {
 	static int blockNewIndex(lua_State *L) {
 		LuaBlock *block = getBlock(L);
 		const char *key = luaL_checkstring(L, 2);
+		
 		luaL_argcheck(L, lua_isfunction(L, 3), 3, "expected function");
 		lua_getiuservalue(L, 1, 1);
 
-		int pastTop = lua_gettop(L);
 		lua_pushvalue(L, 3);
 		lua_setfield(L, -2, key);
 		lua_remove(L, -1);
