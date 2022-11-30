@@ -3,8 +3,8 @@
 #include "shared/Chunk.h"
 
 #include <glm/ext/vector_int4.hpp>
-#include <pmmintrin.h>
-#include <smmintrin.h>
+#include <glm/geometric.hpp>
+
 #include <stdexcept>
 #include <iostream>
 #include <vector>
@@ -15,6 +15,11 @@ namespace r {
 	static const glm::ivec4 SIDES[] = {
 		glm::ivec4(1, 0, 0, 0), glm::ivec4(0, 1, 0, 0), glm::ivec4(0, 0, 1, 0), // west, up, north
 		glm::ivec4(-1, 0, 0, 0), glm::ivec4(0, -1, 0, 0), glm::ivec4(0, 0, -1, 0), // east, down, south 
+	};
+
+	struct alignas(32) Vertex {
+		glm::vec3 pos;
+		glm::vec2 uv;
 	};
 
 	Mesh::Mesh() {
@@ -31,7 +36,7 @@ namespace r {
 		auto world = chunk.getWorld();
 		const auto &palette = world->getPalette();
 
-		std::vector<glm::vec3> data;
+		std::vector<Vertex> data;
 
 		try {
 			for (size_t x = 0; x < CHUNK_SIZE; x++) {
@@ -47,12 +52,13 @@ namespace r {
 						auto block = world->registered.at(id);
 
 #ifdef R_SIMD_ENABLED
-						glm::ivec4 pos(x, y, z, 0);
-#else
-						glm::ivec3 pos(x, y, z);
+						glm::ivec4 pPos(x, y, z, 0);
 #endif
+						glm::ivec3 pos(x, y, z);
 
-						for (const auto& side : SIDES) {
+						// TODO: pointless but avx could vectorize this further
+						for (int i = 0; i < SIDES->length(); i++) {
+							const auto& side = SIDES[i];
 #ifdef R_SIMD_ENABLED
 							static const __m128 zero = { 0, 0, 0, 0 };
 							static const __m128 mChunk = { CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE };
@@ -90,7 +96,21 @@ namespace r {
 							
 							if (neighbor == sh::AIR_BLOCK) { 
 								// TODO: other non-solid blocks?
-								data.reserve(data.size() + 8); // 4 verts, 4 texture coords
+								data.reserve(data.size() + 4); // 4 verts
+
+
+								for (const glm::vec3& offset) {
+									// I could probably lay out the SIDES array in a smarter and far more optimized way,
+									// however, this solution works. If it is not broken, I will not fix it. Ignore the
+									// fact that I am using SIMD up there but not down here. This should auto-vectorize
+									// however, so it's a negligible loss.
+									glm::vec3 pSide = glm::vec3(side);
+									glm::vec3 offset = SIDES[j];
+									if (glm::abs(pSide) == glm::abs(offset)) { continue; }
+									data.push_back(Vertex {
+										.pos = static_cast<glm::vec3>(pos) + glm::cross(pSide, offset) * 0.5f + pSide * 0.5f
+									});	
+								}
 							}
 						}
 					}
