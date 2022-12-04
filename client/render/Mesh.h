@@ -19,9 +19,11 @@ namespace r {
 		Mesh& operator=(Mesh&&) = default;
 
 		bool update(sh::Chunk& chunk);
-		bool render();
+		bool render() const;
 
 	private:
+		size_t verts;
+
 		GLuint vao;
 		GLuint vbo;
 		GLuint ebo;

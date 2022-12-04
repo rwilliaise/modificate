@@ -36,7 +36,7 @@ namespace r {
 	}
 
 	bool Mesh::update(sh::Chunk &chunk) {
-		auto world = chunk.getWorld();
+		auto world = chunk.world;
 		const auto &palette = world->getPalette();
 
 		std::vector<Vertex> data;
@@ -120,6 +120,7 @@ namespace r {
 			std::cerr << e.what() << std::endl;
 		}
 
+		verts = data.size();
 
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -131,6 +132,14 @@ namespace r {
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, uv)));
 
+		glBindVertexArray(0);
+
+		return true;
+	}
+
+	bool Mesh::render() const {
+		glBindVertexArray(vao);
+		glDrawArrays(GL_LINES, 0, verts);
 		glBindVertexArray(0);
 
 		return true;

@@ -11,7 +11,7 @@
 #include <string>
 
 struct Args {
-	char *modsFolder;
+	const char *modsFolder;
 
 };
 
@@ -25,7 +25,9 @@ static inline int start(int argc, char *argv[]) {
 	}
 
 
-	Args args;
+	Args args = {
+		.modsFolder = "mods",
+	};
 	char state = ' ';
 	for (int i = 0; i < argc; i++) {
 		std::string arg(argv[i]);
@@ -84,7 +86,8 @@ int WinMain(HINSTANCE /* inst */,
 
 	char state = ' ';
 	char *word = args;
-	for (char *curr = args; *curr != 0; curr++) {
+	char *curr;
+	for (curr = args; *curr != 0; curr++) {
 		switch (state) {
 		case ' ':
 			if (*curr == '"') {
@@ -110,7 +113,9 @@ int WinMain(HINSTANCE /* inst */,
 		}
 		
 	}
-	argv.push_back(word);
+	if (*curr == 0) {
+		argv.push_back(word);
+	}
 	
 	return start(argv.size(), argv.data());
 }
