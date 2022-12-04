@@ -1,4 +1,5 @@
 
+#include "render/Mesh.h"
 #include "render/Display.h"
 #include <shared/Vm.h>
 
@@ -51,9 +52,18 @@ static inline int start(int argc, char *argv[]) {
 
 	r::Display display;
 
+	sh::Chunk testChunk;
+	testChunk.world = world;
+	testChunk.setBlock(glm::u8vec3(8, 8, 8), "test");
+
+	r::Mesh testMesh;
+	testMesh.update(testChunk);
+
 	while (!display.shouldClose()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(1, 0, 0, 1);
+
+		testMesh.render();
 
 		display.poll();
 	}

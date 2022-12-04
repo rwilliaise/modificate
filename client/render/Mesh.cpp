@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "shared/Chunk.h"
 
+#include <glad/gl.h>
 #include <glm/ext/vector_int4.hpp>
 #include <glm/geometric.hpp>
 
@@ -24,11 +25,13 @@ namespace r {
 
 	Mesh::Mesh() {
 		glGenVertexArrays(1, &vao);
-		glGenBuffers(3, buffers);
+		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &ebo);
 	}
 
 	Mesh::~Mesh() {
-		glDeleteBuffers(3, buffers);
+		glDeleteBuffers(1, &ebo);
+		glDeleteBuffers(1, &vbo);
 		glDeleteVertexArrays(1, &vao);
 	}
 
@@ -117,6 +120,18 @@ namespace r {
 			std::cerr << e.what() << std::endl;
 		}
 
+
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(Vertex), data.data(), GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+		
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, uv)));
+
+		glBindVertexArray(0);
 
 		return true;
 	}

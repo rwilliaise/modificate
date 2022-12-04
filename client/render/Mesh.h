@@ -19,9 +19,11 @@ namespace r {
 		Mesh& operator=(Mesh&&) = default;
 
 		bool update(sh::Chunk& chunk);
+		bool render();
 
 	private:
 		GLuint vao;
-		GLuint buffers[3];
+		GLuint vbo;
+		GLuint ebo;
 	};
 } // r
