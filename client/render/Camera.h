@@ -10,9 +10,11 @@ namespace sh {
 	class Camera {
 	public:
 
-		void updateProjection(size_t width, size_t height);
+		inline void updateProjection(size_t width, size_t height) {
+			projection = glm::perspective(70.f, ((float) width / height), 1.f, 1000.f);
+		}
 
-		inline glm::mat4 getView() {
+		inline glm::mat4 getView() const {
 			glm::mat4 out = glm::translate(glm::identity<glm::mat4>(), pos);
 			return out * glm::mat4(rot) * projection;
 		}

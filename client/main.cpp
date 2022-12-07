@@ -60,7 +60,6 @@ static inline int start(int argc, char *argv[]) {
 	r::Display display;
 
 	sh::Camera camera;
-	);
 
 	sh::Chunk testChunk;
 	testChunk.world = world;
