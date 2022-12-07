@@ -1,4 +1,5 @@
 
+#include "render/Camera.h"
 #include "render/Mesh.h"
 #include "render/Display.h"
 #include <shared/Vm.h>
@@ -47,16 +48,23 @@ static inline int start(int argc, char *argv[]) {
 
 	auto modsFolderPath = std::filesystem::absolute(args.modsFolder);
 
-	std::shared_ptr<sh::World> world;
-
+	std::shared_ptr<sh::World> world = std::make_shared<sh::World>();
 	sh::Vm vm(world);
-	sh::loadMods(vm, modsFolderPath.string());
+
+	try {
+		sh::loadMods(vm, modsFolderPath.string());
+	} catch (std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 
 	r::Display display;
 
+	sh::Camera camera;
+	);
+
 	sh::Chunk testChunk;
 	testChunk.world = world;
-	testChunk.setBlock(glm::u8vec3(8, 8, 8), "test");
+	testChunk.setBlock(glm::u8vec3(0, 0, 8), "test");
 
 	r::Mesh testMesh;
 	testMesh.update(testChunk);
@@ -69,6 +77,8 @@ static inline int start(int argc, char *argv[]) {
 
 		display.poll();
 	}
+
+	std::cout << "hi" << std::endl;
 
 	return 0;
 }

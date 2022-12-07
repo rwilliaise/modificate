@@ -55,7 +55,7 @@ namespace r {
 						auto block = world->registered.at(id);
 
 #ifdef R_SIMD_ENABLED
-						glm::ivec4 pPos(x, y, z, 0);
+						glm::ivec4 pPos(x, y, CHUNK_SIZE - z, 0);
 #endif
 						glm::ivec3 pos(x, y, z);
 
