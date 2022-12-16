@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <memory>
 #include <vector>
 #include <string>
@@ -34,6 +35,9 @@ namespace sh {
 		 */
 		void split(Mod &&mod);
 		void split(Mod &mod);
+
+		void run(std::atomic_bool &, std::string &folderName);
+		void loadFolder(std::string folderName);
 
 	private:
 		std::shared_ptr<void> global;

@@ -55,9 +55,9 @@ namespace r {
 						auto block = world->registered.at(id);
 
 #ifdef R_SIMD_ENABLED
-						glm::ivec4 pPos(x, y, CHUNK_SIZE - z, 0);
+						glm::ivec4 pPos(x, y, -z, 0);
 #endif
-						glm::ivec3 pos(x, y, z);
+						glm::ivec3 pos(x, y, -z);
 
 						// TODO: pointless but avx could vectorize this further
 						for (int i = 0; i < SIDES->length(); i++) {
@@ -102,13 +102,14 @@ namespace r {
 								data.reserve(data.size() + 4); // 4 verts
 
 								for (int j = 0; j < SIDES->length(); j++) {
-									glm::vec3 pSide = glm::vec3(side);
+									glm::vec3 pSide = side;
 									glm::vec3 offset = SIDES[j];
 									// TODO: there is a better way to do this, considering the SIDES table could be laid
 									// out better
 									if (glm::abs(pSide) == glm::abs(offset)) { continue; }
 									data.push_back(Vertex {
-										.pos = static_cast<glm::vec3>(pos) + glm::cross(pSide, offset) * 0.5f + pSide * 0.5f
+										.pos = static_cast<glm::vec3>(pos) + glm::cross(pSide, offset) * 0.5f + pSide * 0.5f,
+										.uv = glm::vec2()
 									});	
 								}
 							}
@@ -130,7 +131,7 @@ namespace r {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 		
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, uv)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, uv)));
 
 		glBindVertexArray(0);
 

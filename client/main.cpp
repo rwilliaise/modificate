@@ -2,6 +2,8 @@
 #include "render/Camera.h"
 #include "render/Mesh.h"
 #include "render/Display.h"
+#include "render/Render.h"
+#include <atomic>
 #include <shared/Vm.h>
 
 #include <filesystem>
@@ -10,27 +12,15 @@
 #include <cctype>
 #include <memory>
 #include <string>
+#include <thread>
 
 struct Args {
 	const char *modsFolder;
-
 };
 
-static inline int start(int argc, char *argv[]) {
-	glfwSetErrorCallback([](int code, const char *desc) {
-		std::cerr << "GLFW ERROR (" << code << "): " << desc << std::endl;
-	});
-	
-	if (glfwInit() == GLFW_FALSE) {
-		return 1;
-	}
-
-
-	Args args = {
-		.modsFolder = "mods",
-	};
+static void processArguments(Args &args, int argc, char *argv[]) {
 	char state = ' ';
-	for (int i = 0; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
 		std::string arg(argv[i]);
 		
 		switch (state) {
@@ -45,9 +35,27 @@ static inline int start(int argc, char *argv[]) {
 			state = 'm';
 		}
 	}
+}
+
+static inline int start(int argc, char *argv[]) {
+	glfwSetErrorCallback([](int code, const char *desc) {
+		std::cerr << "GLFW ERROR (" << code << "): " << desc << std::endl;
+	});
+	
+	if (glfwInit() == GLFW_FALSE) {
+		return 1;
+	}
+
+
+	Args args = {
+		.modsFolder = "mods",
+	};
+
+	processArguments(args, argc, argv);
 
 	auto modsFolderPath = std::filesystem::absolute(args.modsFolder);
 
+	std::atomic_bool open = true;
 	std::shared_ptr<sh::World> world = std::make_shared<sh::World>();
 	sh::Vm vm(world);
 
@@ -57,27 +65,10 @@ static inline int start(int argc, char *argv[]) {
 		std::cerr << e.what() << std::endl;
 	}
 
-	r::Display display;
+	std::thread renderThread(&r::startRenderThread, world, open);
+	std::thread vmThread(&sh::Vm::run, world, open, args.modsFolder);
 
-	sh::Camera camera;
-
-	sh::Chunk testChunk;
-	testChunk.world = world;
-	testChunk.setBlock(glm::u8vec3(0, 0, 8), "test");
-
-	r::Mesh testMesh;
-	testMesh.update(testChunk);
-
-	while (!display.shouldClose()) {
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(1, 0, 0, 1);
-
-		testMesh.render();
-
-		display.poll();
-	}
-
-	std::cout << "hi" << std::endl;
+	renderThread.join();
 
 	return 0;
 }

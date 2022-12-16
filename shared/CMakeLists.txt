@@ -4,6 +4,7 @@ set(SHARED_SOURCES
 	src/lua/LuaWorld.cpp
 	src/lua/LuaVector.cpp
 	src/lua/Mod.cpp
+	src/VmThread.cpp
 	src/Chunk.cpp
 	src/Tar.cpp
 	src/World.cpp

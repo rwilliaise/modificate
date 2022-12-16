@@ -4,6 +4,7 @@ set(CLIENT_SOURCES
 
 	# render
 	render/Display.cpp
+	render/Render.cpp
 	render/Mesh.cpp
 )
 
