@@ -36,7 +36,7 @@ namespace sh {
 		void split(Mod &&mod);
 		void split(Mod &mod);
 
-		void run(std::atomic_bool &, std::string &folderName);
+		void run(std::atomic_bool *, std::string folderName);
 		void loadFolder(std::string folderName);
 
 	private:

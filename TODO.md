@@ -4,6 +4,13 @@ Not every TODO comment can fit in just one line - or even several. Some TODOs
 are too overarching and general to the project to fit in one file or scope.
 Thus, this file exists to extract some bigger TODOs out of the source files.
 
+## Assorted buildsystem tidbits
+
+### Auto vcpkg install
+[Trenchbroom](https://github.com/Trenchbroom/Trenchbroom) has a easily portable
+buildsystem by virtue of utilizing a submodule of vcpkg. This might be a good
+idea for the future.
+
 ## Resource Streaming
 
 Addons may include dozens of megabytes of resources. It would be wasteful to

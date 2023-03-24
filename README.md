@@ -4,7 +4,7 @@ A Minecraft clone made for me and my friends. Uses Lua for implementing game mec
 
 ## Building
 
-I use a full CMake buildsystem since I develop on both a Windows and Arch Linux machine.
+I use a full CMake buildsystem since I deploy across platforms (primarily Linux and macOS).
 
 First install the required packages:
 

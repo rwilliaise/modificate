@@ -65,8 +65,8 @@ static inline int start(int argc, char *argv[]) {
 		std::cerr << e.what() << std::endl;
 	}
 
-	std::thread renderThread(&r::startRenderThread, world, open);
-	std::thread vmThread(&sh::Vm::run, world, open, args.modsFolder);
+	std::thread renderThread(&r::startRenderThread, world, &open);
+	std::thread vmThread(&sh::Vm::run, &vm, &open, std::string(args.modsFolder));
 
 	renderThread.join();
 
