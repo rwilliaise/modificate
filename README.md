@@ -6,6 +6,11 @@ A Minecraft clone made for me and my friends. Uses Lua for implementing game mec
 
 I use a full CMake buildsystem since I deploy across platforms (primarily Linux and macOS).
 
+Make sure that submodules were downloaded:
+```
+git submodule update --init
+```
+
 First install the required packages:
 
 ```
@@ -15,10 +20,6 @@ pacman -S glm boost
 ```
 brew install glm
 brew install boost
-```
-
-```
-./vcpkg install glm:x64-windows-static boost-json:x64-windows-static
 ```
 
 All other required packages are in `thirdparty/`
