@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 	str << file.rdbuf();
 	file.close();
 
-	std::shared_ptr<sh::World> world = std::make_shared<sh::World>();
+	std::shared_ptr<sh::world> world = std::make_shared<sh::world>();
 	sh::Vm vm(world);
 	
 	sh::Mod test;

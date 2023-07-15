@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 		std::cerr << "Usage: loading [DIR]" << std::endl;
 		return 1;
 	}
-	auto world = std::make_shared<sh::World>();
+	auto world = std::make_shared<sh::world>();
 	sh::Vm vm(world);
 	sh::loadMods(vm, std::string(argv[1]));
 

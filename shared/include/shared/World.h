@@ -1,39 +1,26 @@
 
-#pragma once 
+#pragma once
 
-#include <unordered_map>
-#include <cstdint>
-#include <string>
-#include <memory>
+#include "shared/Level.h"
+
 #include <map>
-
-#include <glm/ext/vector_int3.hpp>
-#include <glm/gtx/hash.hpp>
+#include <memory>
+#include <string>
 
 namespace sh {
-	const auto AIR_BLOCK = 0;
+    
+    class World : public std::enable_shared_from_this<World> {
+    public:
 
-	class Block;
-	class Chunk;
+        explicit World (std::filesystem::path world_path): world_path(world_path) {}
 
-	class World : public std::enable_shared_from_this<World> {
-	public:
-		World() {}
+        World(World &&) = default;
+        World &operator=(World &&) = default;
+        World(const World &) = delete;
+        World &operator=(const World &) = delete;
 
-		bool setBlock(glm::ivec3 pos, std::string id);
-
-		inline const auto &getPalette() { return palette; }
-
-		std::map<std::string, Block> registered;
-	private:
-		friend class Chunk;
-
-		uint16_t next = 1;
-
-		std::unordered_map<uint16_t, std::string> palette;
-		std::unordered_map<glm::i16vec3, Chunk> chunks;
-	};
+    private:
+        std::filesystem::path world_path;
+        std::map<std::string, Level> levels;
+    };
 }
-
-#include "Block.h"
-#include "Chunk.h"

@@ -20,18 +20,18 @@ namespace r {
 		}
 
 		inline void setSizeCallback(std::function<void (int, int)> cb) {
-			sizeCallback = cb;
+			size_callback = cb;
 
 			int width, height;
 			glfwGetWindowSize(get(), &width, &height);
-			sizeCallback(width, height);
+			size_callback(width, height);
 		}
 
 		void poll();
 
 	private: 
 		std::shared_ptr<GLFWwindow> window;
-		std::function<void (int, int)> sizeCallback;
+		std::function<void (int, int)> size_callback;
 	};
 
 } // r

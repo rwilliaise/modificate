@@ -14,8 +14,8 @@ namespace r {
 		glfwSetWindowSizeCallback(win, [](auto win, auto width, auto height) {
 			Display *display = (Display *) glfwGetWindowUserPointer(win);
 			
-			if (display->sizeCallback) {
-				display->sizeCallback(width, height);
+			if (display->size_callback) {
+				display->size_callback(width, height);
 			}
 		});
 

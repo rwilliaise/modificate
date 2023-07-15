@@ -1,51 +1,76 @@
 
 #pragma once
 
-#include <atomic>
 #include <memory>
+#include <unordered_map>
 #include <vector>
-#include <string>
-
-#include "World.h"
-#include "Mod.h" 
+#include <lua.hpp>
 
 namespace sh {
 
-	/**
-	 * Intentionally opaque class to allow multiple backends.
-	 */
-	class Vm {
-	public:
-		explicit Vm(std::shared_ptr<World> world);
+    using execution_context = std::shared_ptr<lua_State>;
 
-		inline void *get() { 
-			return global.get();
-		}
+    enum VmInterfaces {
+        WORLD
+    };
 
-		inline auto getWorld() { 
-			return world;
-		}
+    class Vm;
 
-		inline const auto& getMods() {
-			return mods;
-		}
+    /**
+     * Base class for objects that can change state in the Vm, such as the
+     * current world.
+     *
+     * Usually represents an API in the Vm, such as the `world` global.
+     */
+    class VmInterface {
+        public:
 
-		/**
-		 * Split global context into another smaller context (mod).
-		 */
-		void split(Mod &&mod);
-		void split(Mod &mod);
+        explicit VmInterface(std::shared_ptr<Vm> vm): vm(vm) {}
 
-		void run(std::atomic_bool *, std::string folderName);
-		void loadFolder(std::string folderName);
+        /**
+         * Called only once, when the interface is called upon to "enter" the Vm.
+         */
+        virtual void mount(execution_context context) = 0;
+        /**
+         * Ran everytime that the interface is called upon to "enter" the Vm.
+         */
+        virtual void update(execution_context context) = 0;
 
-	private:
-		std::shared_ptr<void> global;
-		std::shared_ptr<World> world;
+    protected:
+        std::shared_ptr<Vm> vm;
+    };
 
-		std::vector<Mod> mods;
-	};
+    class Mod {
+    private:
+        friend class Vm;
 
-} // sh
+        execution_context mod_context;
+    };
 
+    class Vm : public std::enable_shared_from_this<Vm> {
+    public:
 
+        Vm();
+
+        Vm(Vm &&) = default;
+        Vm &operator=(Vm &&) = default;
+        Vm(const Vm &) = delete;
+        Vm &operator=(const Vm &) = delete;
+
+        /**
+         * Find mods installed on the system, and mount them.
+         */
+        void search();
+        
+        /**
+         * Adds an interface to the Vm, or updates it if detected.
+         */
+        void enter(VmInterfaces id, VmInterface &&interface);
+
+    private:
+        std::vector<Mod> mounted;
+        std::unordered_map<VmInterfaces, VmInterface> interfaces;
+
+        execution_context global_context;
+    };
+}

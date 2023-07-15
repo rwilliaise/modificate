@@ -5,7 +5,6 @@ set(CLIENT_SOURCES
 	# render
 	render/Display.cpp
 	render/Render.cpp
-	render/Mesh.cpp
 )
 
 if(WIN32)

@@ -14,29 +14,6 @@
 #include <string>
 #include <thread>
 
-struct Args {
-	const char *modsFolder;
-};
-
-static void processArguments(Args &args, int argc, char *argv[]) {
-	char state = ' ';
-	for (int i = 1; i < argc; i++) {
-		std::string arg(argv[i]);
-		
-		switch (state) {
-		case 'm':
-			state = ' ';
-			args.modsFolder = argv[i];
-			std::cout << "modsFolder = " << args.modsFolder << std::endl;
-			break;
-		}
-
-		if (arg == "--mods" || arg == "-m") {
-			state = 'm';
-		}
-	}
-}
-
 static inline int start(int argc, char *argv[]) {
 	glfwSetErrorCallback([](int code, const char *desc) {
 		std::cerr << "GLFW ERROR (" << code << "): " << desc << std::endl;
@@ -47,16 +24,8 @@ static inline int start(int argc, char *argv[]) {
 	}
 
 
-	Args args = {
-		.modsFolder = "mods",
-	};
-
-	processArguments(args, argc, argv);
-
-	auto modsFolderPath = std::filesystem::absolute(args.modsFolder);
-
 	std::atomic_bool open = true;
-	std::shared_ptr<sh::World> world = std::make_shared<sh::World>();
+	std::shared_ptr<sh::world> world = std::make_shared<sh::world>();
 	sh::Vm vm(world);
 
 	try {

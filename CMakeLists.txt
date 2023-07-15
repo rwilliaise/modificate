@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 enable_testing()
 
-include(AddMod.cmake)
+include(cmake/AddMod.cmake)
 
 find_package(glm CONFIG REQUIRED)
 find_package(Boost 1.80 CONFIG REQUIRED COMPONENTS
@@ -23,4 +23,6 @@ add_subdirectory(thirdparty/glad)
 
 add_subdirectory(shared)
 add_subdirectory(client)
+
+include(cmake/Packaging.cmake)
 
