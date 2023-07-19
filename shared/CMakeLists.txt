@@ -16,7 +16,7 @@ target_include_directories(luajit_lib INTERFACE ${INSTALL_DIR}/include)
 unset(INSTALL_DIR)
 
 add_library(modificate_shared
-    shared.c
+    log.c
 )
-target_include_directories(modificate_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(modificate_shared SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(modificate_shared PRIVATE luajit_lib)

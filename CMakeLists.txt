@@ -18,8 +18,14 @@ find_program(MAKE_EXE
     DOC "GNU Make"
 )
 
+fetchcontent_declare(cglm
+    GIT_REPOSITORY  https://github.com/recp/cglm
+    GIT_TAG         v0.9.0
+)
+
+fetchcontent_makeavailable(cglm)
 find_package(Threads REQUIRED)
-link_libraries(Threads::Threads)
+link_libraries(Threads::Threads cglm m)
 
 add_compile_definitions(
     MODIFICATE_VERSION="${CMAKE_PROJECT_VERSION}"

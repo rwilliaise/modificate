@@ -29,9 +29,15 @@ int main(int argc, char *argv[]) {
                 mode = 1;
             else if (strcmp(arg, "-h") == 0)
                 mode = 2;
-            else if (strcmp(arg, "--help") == 0)
+            else if (strcmp(arg, "--help") == 0) {
                 mode = -1;
-            else
+                printf( "Usage: modificate_client [OPTIONS]\n\n"
+                        "Available options:\n"
+                        "--help\t\tprints this dialog.\n"
+                        "-w\t\tsets the width of the client window.\n"
+                        "-h\t\tsets the height of the client window.\n");
+                return 0;
+            } else
                 mode = 3;
             break;
         case 1: // -w
@@ -43,12 +49,6 @@ int main(int argc, char *argv[]) {
             mode = 0;
             break;
         default:
-            printf( "Usage: modificate_client [OPTIONS]\n\n"
-                    "Available options:\n"
-                    "--help\t\tprints this dialog.\n"
-                    "-w\t\t\tsets the width of the client window.\n"
-                    "-h\t\t\tsets the height of the client window.\n");
-        case 3:
             break;
         }
     }
