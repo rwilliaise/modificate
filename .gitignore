@@ -8,3 +8,6 @@ cmake-build*/
 
 # clangd
 .cache/
+
+# testing
+run

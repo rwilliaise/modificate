@@ -12,8 +12,12 @@ fetchcontent_declare(cglm
 )
 fetchcontent_makeavailable(glfw cglm)
 
+set(GLAD_LOCATION ${CMAKE_SOURCE_DIR}/thirdparty/glad)
+
 add_executable(modificate_client
     client.c
     render.c
+    ${GLAD_LOCATION}/src/gl.c
 )
 target_link_libraries(modificate_client PRIVATE glfw cglm)
+target_include_directories(modificate_client PRIVATE ${GLAD_LOCATION}/include)
