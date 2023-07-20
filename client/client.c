@@ -12,8 +12,8 @@ struct start_ctx { // derived from program arguments
 };
 
 static int start(struct start_ctx *ctx) {
-    render_ctx_t *R = render_open(ctx->width, ctx->height);
-    return render_loop(R);
+    render_open(ctx->width, ctx->height);
+    return render_loop();
 }
 
 // TODO: WinMain, macOS main, others

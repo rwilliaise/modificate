@@ -7,8 +7,14 @@
 
 #include "render.h"
 
+GLFWwindow *loaded_window = NULL;
+
 struct render_ctx {
     GLFWwindow *win;
+};
+
+struct render_vao {
+    GLint vao;
 };
 
 static void render_resize_callback(GLFWwindow *win, int width, int height) {
@@ -19,11 +25,11 @@ static void render_error_callback(int error, const char *desc) {
     log_log(LOG_ERROR, "GLFW ERROR: %d: %s", error, desc);   
 }
 
-render_ctx_t *render_open(int width, int height) {
+int render_open(int width, int height) {
     glfwSetErrorCallback(render_error_callback);
 
     if (glfwInit() != GLFW_TRUE) {
-        return NULL;
+        return 1;
     }
 
     // always latest
@@ -32,30 +38,30 @@ render_ctx_t *render_open(int width, int height) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     GLFWwindow *win = glfwCreateWindow(width, height, "modificate " MODIFICATE_VERSION, NULL, NULL);
 
+    glfwMakeContextCurrent(win);
+    int loaded_gl_version = gladLoadGL(glfwGetProcAddress);
+    log_log(LOG_INFO, "GL version: %d.%d", GLAD_VERSION_MAJOR(loaded_gl_version), GLAD_VERSION_MINOR(loaded_gl_version));
 
-    render_ctx_t *ctx = malloc(sizeof(render_ctx_t));
-    if (!ctx) {
-        log_log(LOG_ERROR, "out of memory!");
-        glfwTerminate();
-        return NULL;
+    if (loaded_gl_version != GLAD_GL_VERSION_4_6) {
+        log_log(LOG_WARN, "GL version is out of date!");
     }
 
-    glfwMakeContextCurrent(win);
-    gladLoadGL(glfwGetProcAddress);
-
-    glfwSetWindowUserPointer(win, ctx);
     glfwSetWindowSizeCallback(win, render_resize_callback);
 
     glViewport(0, 0, width, height);
     
-    ctx->win = win;
-    return ctx;
+    loaded_window = win;
+    return 0;
 }
 
-int render_loop(render_ctx_t *ctx) {
-    while (!glfwWindowShouldClose(ctx->win)) {
+int render_loop() {
+    if (!loaded_window) {
+        log_log(LOG_ERROR, "Rendering cannot begin before the window is open.");
+        return 1;
+    }
+    while (!glfwWindowShouldClose(loaded_window)) {
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(ctx->win);
+        glfwSwapBuffers(loaded_window);
         glfwPollEvents();
     }
     return 0;
