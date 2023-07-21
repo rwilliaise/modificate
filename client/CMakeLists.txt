@@ -17,4 +17,4 @@ add_executable(modificate_client
     ${GLAD_LOCATION}/src/gl.c
 )
 target_link_libraries(modificate_client PRIVATE glfw modificate_shared)
-target_include_directories(modificate_client PRIVATE ${GLAD_LOCATION}/include)
+target_include_directories(modificate_client SYSTEM PRIVATE ${GLAD_LOCATION}/include)

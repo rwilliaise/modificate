@@ -1,7 +1,9 @@
 
+#include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 
 #include <shared/log.h>
 
@@ -17,7 +19,7 @@ static const char *severity_table[] = {
 static const char *severity_colors[] = {
     "\x1B[36m",
     "\x1B[36m",
-    "\x1B[36m",
+    "",
     "\x1B[33m",
     "\x1B[31m",
 };
@@ -46,5 +48,12 @@ void log_log(enum log_severity severity, const char *format, ...) {
     vprintf(format, list);
     va_end(list);
     printf("%s\n", RESET);
+}
+
+void log_perror(const char *str) {
+    if (str)
+        log_log(LOG_ERROR, "%s: %s", str, strerror(errno));
+    else
+        log_log(LOG_ERROR, "%s", strerror(errno));
 }
 

@@ -12,5 +12,7 @@ enum log_severity {
 
 int log_open();
 void log_log(enum log_severity severity, const char *format, ...);
+/** Similar functionality to perror(), however uses log_log */
+void log_perror(const char *str);
 
 #endif // SHARED_LOG_H_
