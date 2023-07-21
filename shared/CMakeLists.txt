@@ -21,3 +21,4 @@ add_library(modificate_shared
 )
 target_include_directories(modificate_shared SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(modificate_shared PRIVATE luajit_lib)
+add_dependencies(modificate_shared luajit)

@@ -4,7 +4,7 @@
 
 #include <cglm/ivec3.h>
 
-#define CHUNK_SIZE 32
+#define WORLD_CHUNK_SIZE 32
 
 typedef enum {
     NORTH,
@@ -28,7 +28,7 @@ typedef struct {
  */
 typedef struct {
     ivec3 chunk_position;
-    char blocks[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+    char blocks[WORLD_CHUNK_SIZE * WORLD_CHUNK_SIZE * WORLD_CHUNK_SIZE]; // XYZ
     /* palette of block states used for the blocks array */
     world_blockstate_t *block_table[0];
 } world_chunk_t;
