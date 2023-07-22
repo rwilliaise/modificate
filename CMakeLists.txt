@@ -14,6 +14,8 @@ project(modificate
     DESCRIPTION "Voxel-based sandbox game"
 )
 
+set(CPACK_PACKAGE_NAME "Modificate")
+set(CPACK_PACKAGE_VENDOR "rwilliaise and constituents")
 set(CPACK_PACKAGE_CHECKSUM SHA256)
 set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_PROJECT_VERSION_MINOR}")
@@ -32,7 +34,12 @@ fetchcontent_declare(cglm
     GIT_TAG         v0.9.0
 )
 
-fetchcontent_makeavailable(cglm)
+fetchcontent_getproperties(cglm)
+if(NOT cglm_POPULATED)
+    fetchcontent_populate(cglm)
+    add_subdirectory(${cglm_SOURCE_DIR} ${cglm_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 find_package(Threads REQUIRED)
 link_libraries(Threads::Threads cglm m)
 
