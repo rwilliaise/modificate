@@ -1,21 +1,14 @@
-#include <shared/world.h>
-#include <shared/log.h>
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <stdlib.h>
+#include <shared/log.h>
 
 #include "render.h"
 
-#define R_UNLOADED_MAX 4
-
 GLFWwindow *loaded_window = NULL;
 
-int unloaded_amount = 0;
-r_chunk_t *unloaded[R_UNLOADED_MAX]; // holds unused meshes for later use
-
-// window stuff
-
 static void r_resize_callback(GLFWwindow *win, int width, int height) {
+    log_debug("window resized, width = %d, height = %d", width, height);
     glViewport(0, 0, width, height);
 }
 
@@ -41,7 +34,6 @@ static void r_gl_error_callback(
         logging_severity = LOG_DEBUG;
         break;
     }
-
 
     log_log(logging_severity, "GL: %s", message);
 }
@@ -95,7 +87,7 @@ int r_open(int width, int height) {
 
 #ifndef NDEBUG
     if (glfwExtensionSupported("GL_ARB_debug_output") == GLFW_TRUE) {
-        log_log(LOG_DEBUG, "GL debug enabled.");
+        log_debug("GL debug enabled.");
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(r_gl_error_callback, NULL);
     }
@@ -118,84 +110,6 @@ int r_loop() {
         glfwSwapBuffers(loaded_window);
         glfwPollEvents();
     }
-    return 0;
-}
-
-// chunk stuff
-
-static r_chunk_t *r_chunk_replace(world_chunk_t *world_chunk) { // finds or creates a new chunk
-    if (unloaded_amount > 0) {
-        int idx = --unloaded_amount;
-        r_chunk_t *target = unloaded[idx];
-        target->chunk = world_chunk;
-        unloaded[idx] = NULL;
-        return target;
-    }
-
-    r_chunk_t *chunk = malloc(sizeof(r_chunk_t));
-    if (chunk == NULL) {
-        return NULL;
-    }
-
-    chunk->chunk = world_chunk;
-    chunk->built_verts = 0;
-    glGenVertexArrays(1, &chunk->vao);
-    glGenBuffers(3, chunk->vbos);
-
-    glBindVertexArray(chunk->vao);
-    glEnableVertexAttribArray(0); // pos
-    glEnableVertexAttribArray(1); // normal
-    glEnableVertexAttribArray(2); // uv
-    
-    return chunk;
-}
-
-r_chunk_t *r_chunk_load(world_chunk_t *world_chunk) {
-    if (world_chunk == NULL) {
-        return NULL;
-    }
-
-    r_chunk_t *chunk = r_chunk_replace(world_chunk);
-    if (!chunk) {
-        return NULL;
-    }
-
-    if (r_chunk_rebuild(chunk)) {
-        log_log(LOG_WARN, "Failed to build chunk (%d, %d, %d)!",
-                world_chunk->chunk_position[0],
-                world_chunk->chunk_position[1],
-                world_chunk->chunk_position[2]);
-    }
-
-    return chunk;
-}
-
-void r_chunk_unload(r_chunk_t *chunk) {
-    if (unloaded_amount < R_UNLOADED_MAX) {
-        chunk->chunk = NULL;
-        unloaded[unloaded_amount++] = chunk;
-        return;
-    }
-
-    glDeleteBuffers(3, chunk->vbos);
-    glDeleteVertexArrays(1, &chunk->vao);
-
-    free(chunk);
-}
-
-int r_chunk_rebuild(r_chunk_t *chunk) {
-    if (chunk == NULL || chunk->chunk == NULL) { return 1; }
-    world_chunk_t *world_chunk = chunk->chunk;
-
-    return 0;
-}
-
-int r_chunk_render(r_chunk_t *chunk) {
-    if (chunk == NULL || chunk->built_verts == 0) { return 1; }
-
-    glBindVertexArray(chunk->vao);
-    glDrawArrays(GL_TRIANGLES, 0, chunk->built_verts);
-
     return 0;
 }
 

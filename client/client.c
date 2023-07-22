@@ -1,5 +1,6 @@
 
 #include <shared/filesystem.h>
+#include <shared/log.h>
 
 #include <pthread.h>
 #include <limits.h>
@@ -17,9 +18,14 @@ struct start_ctx { // derived from program arguments
 };
 
 static int start(struct start_ctx *ctx) {
+    log_open();
+
     char path[PATH_MAX];
     realpath(ctx->running_directory, path);
     fs_running_directory = path;
+
+    log_trace(ctx->running_directory);
+    log_trace(path);
 
     if (r_open(ctx->width, ctx->height)) { return 1; }
     return r_loop();
@@ -27,7 +33,7 @@ static int start(struct start_ctx *ctx) {
 
 // TODO: WinMain, macOS main, others
 int main(int argc, char *argv[]) {
-    struct start_ctx ctx = { 640, 480 };
+    struct start_ctx ctx = { 640, 480, "." };
 
     int mode = 0;
     for (int i = 1; i < argc; i++) {
@@ -59,7 +65,9 @@ int main(int argc, char *argv[]) {
             mode = 0;
             break;
         case 3: // -r and --run
-
+            ctx.running_directory = arg;
+            mode = 0;
+            break;
         default:
             break;
         }

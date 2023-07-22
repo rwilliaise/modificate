@@ -4,13 +4,22 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+include(InstallRequiredSystemLibraries)
 include(ExternalProject)
 include(FetchContent)
 
 project(modificate
     LANGUAGES C
     VERSION 0.1.0
+    DESCRIPTION "Voxel-based sandbox game"
 )
+
+set(CPACK_PACKAGE_CHECKSUM SHA256)
+set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_PROJECT_VERSION_PATCH}")
+set(CPACK_VERBATIM_VARIABLES ON)
+include(CPack)
 
 find_program(MAKE_EXE
     NAMES gmake mingw32-make make
