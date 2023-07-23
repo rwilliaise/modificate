@@ -5,11 +5,15 @@
 
 #include "render.h"
 
-GLFWwindow *loaded_window = NULL;
+GLFWwindow *r_win = NULL;
+int r_win_width = 0, r_win_height = 0;
 
 static void r_resize_callback(GLFWwindow *win, int width, int height) {
     log_debug("window resized, width = %d, height = %d", width, height);
     glViewport(0, 0, width, height);
+
+    r_win_width = width;
+    r_win_height = height;
 }
 
 static void r_gl_error_callback(
@@ -94,22 +98,37 @@ int r_open(int width, int height) {
 #endif
 
     glfwSetWindowSizeCallback(win, r_resize_callback);
-    glViewport(0, 0, width, height);
+    r_resize_callback(win, width, height);
     
-    loaded_window = win;
+    r_win = win;
     return 0;
 }
 
+static void r_frame() { 
+    r_camera_update();
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glfwSwapBuffers(r_win);
+    glfwPollEvents();
+}
+
 int r_loop() {
-    if (!loaded_window) {
+    if (!r_win) {
         log_log(LOG_ERROR, "Rendering cannot begin before the window is open.");
         return 1;
     }
-    while (!glfwWindowShouldClose(loaded_window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(loaded_window);
-        glfwPollEvents();
+    while (!glfwWindowShouldClose(r_win)) {
+        r_frame();
     }
+    return 0;
+}
+
+int r_close() {
+    if (r_win == NULL) {
+        return 1;
+    }
+
+    glfwTerminate();
     return 0;
 }
 

@@ -13,5 +13,6 @@ typedef enum {
 } environment_t;
 
 extern environment_t loaded_env;
+extern char *fs_running_directory;
 
 #endif // SHARED_ENVIRONMENT_H_

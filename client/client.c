@@ -1,8 +1,7 @@
 
-#include <shared/filesystem.h>
+#include <shared/environment.h>
 #include <shared/log.h>
 
-#include <pthread.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +27,9 @@ static int start(struct start_ctx *ctx) {
     log_trace(path);
 
     if (r_open(ctx->width, ctx->height)) { return 1; }
-    return r_loop();
+    int result = r_loop();
+    if (r_close()) { return 1; }
+    return result;
 }
 
 // TODO: WinMain, macOS main, others

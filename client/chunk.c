@@ -60,17 +60,20 @@ r_chunk_t *r_chunk_load(world_chunk_t *world_chunk) {
     return chunk;
 }
 
-void r_chunk_unload(r_chunk_t *chunk) {
+int r_chunk_unload(r_chunk_t *chunk) {
+    if (chunk == NULL) { return 1; }
+
     if (unloaded_amount < R_UNLOADED_MAX) {
         chunk->chunk = NULL;
         unloaded[unloaded_amount++] = chunk;
-        return;
+        return 0;
     }
 
     glDeleteBuffers(3, chunk->vbos);
     glDeleteVertexArrays(1, &chunk->vao);
 
     free(chunk);
+    return 0;
 }
 
 int r_chunk_rebuild(r_chunk_t *chunk) {

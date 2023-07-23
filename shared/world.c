@@ -22,3 +22,4 @@ void world_load() {
         break;
     }
 }
+

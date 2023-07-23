@@ -3,7 +3,9 @@
 #define RENDER_H_
 
 #include <glad/gl.h>
+#include <GLFW/glfw3.h>
 #include <shared/world.h>
+
 #include <cglm/vec3.h>
 #include <cglm/mat4.h>
 #include <cglm/quat.h>
@@ -35,16 +37,20 @@ typedef struct {
     mat4 view;
 } r_camera_t;
 
-extern r_camera_t *r_camera;
+extern GLFWwindow *r_win;
+extern int r_win_width, r_win_height;
+extern r_camera_t r_camera;
 
 int r_open(int width, int height);
 int r_loop();
 int r_close();
 
 r_chunk_t *r_chunk_load(world_chunk_t *world_chunk);
-void r_chunk_unload(r_chunk_t *chunk);
+int r_chunk_unload(r_chunk_t *chunk);
 /** rebuilds chunk mesh */
 int r_chunk_rebuild(r_chunk_t *chunk);
 int r_chunk_render(r_chunk_t *chunk);
+
+int r_camera_update();
 
 #endif // RENDER_H_
