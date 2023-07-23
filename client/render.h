@@ -4,6 +4,9 @@
 
 #include <glad/gl.h>
 #include <shared/world.h>
+#include <cglm/vec3.h>
+#include <cglm/mat4.h>
+#include <cglm/quat.h>
 
 #include <stdint.h>
 
@@ -18,11 +21,21 @@ typedef struct {
     struct r_chunk_layer {
         uint32_t start; // starting vertex
         uint32_t verts; // vertex count of layer
+        GLuint program; // shader program id
     } *layers;
     uint8_t layer_count;
     GLuint vao;
     GLuint vbos[3]; // 0 -> pos, 1 -> normal, 2 -> uv
 } r_chunk_t;
+
+typedef struct {
+    vec3 pos;
+    float fov;
+    versor rot;
+    mat4 view;
+} r_camera_t;
+
+extern r_camera_t *r_camera;
 
 int r_open(int width, int height);
 int r_loop();

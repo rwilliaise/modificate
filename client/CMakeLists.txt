@@ -15,7 +15,9 @@ set(GLAD_LOCATION ${CMAKE_SOURCE_DIR}/thirdparty/glad)
 add_executable(modificate_client
     client.c
     window.c
+    camera.c
     chunk.c
+    atlas.c
     ${GLAD_LOCATION}/src/gl.c
 )
 target_link_libraries(modificate_client PRIVATE glfw modificate_shared)
