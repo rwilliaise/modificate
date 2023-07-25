@@ -1,7 +1,6 @@
 
 #include <cglm/cam.h>
-
-#include "render.h"
+#include <client/render.h>
 
 r_camera_t r_camera = {
     .pos = GLM_VEC3_ZERO_INIT,

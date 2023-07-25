@@ -1,13 +1,13 @@
 
 #include <shared/environment.h>
 #include <shared/log.h>
+#include <client/render.h>
 
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-#include "render.h"
 
 char *env_running_directory;
 

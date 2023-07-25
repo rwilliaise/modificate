@@ -2,9 +2,9 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <shared/log.h>
+#include <client/render.h>
 
 #include "stb_image.h"
-#include "render.h"
 
 GLFWwindow *r_win = NULL;
 int r_win_width = 0, r_win_height = 0;
@@ -62,7 +62,7 @@ int r_open(int width, int height) {
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    GLFWwindow *win = glfwCreateWindow(width, height, "� modificate " MODIFICATE_VERSION, NULL, NULL);
+    GLFWwindow *win = glfwCreateWindow(width, height, "modificate " MODIFICATE_VERSION, NULL, NULL);
 
     glfwMakeContextCurrent(win);
     int loaded_gl_version = gladLoadGL(glfwGetProcAddress);

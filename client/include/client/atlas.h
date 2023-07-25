@@ -1,6 +1,6 @@
 
-#ifndef R_ATLAS_H_
-#define R_ATLAS_H_
+#ifndef CLIENT_RENDER_ATLAS_H_
+#define CLIENT_RENDER_ATLAS_H_
 
 #include <cglm/vec2.h>
 #include <glad/gl.h>

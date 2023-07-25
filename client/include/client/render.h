@@ -1,6 +1,6 @@
 
-#ifndef RENDER_H_
-#define RENDER_H_
+#ifndef CLIENT_RENDER_H_
+#define CLIENT_RENDER_H_
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -53,4 +53,4 @@ int r_chunk_render(r_chunk_t *chunk);
 
 int r_camera_update();
 
-#endif // RENDER_H_
+#endif // CLIENT_RENDER_H_

@@ -1,10 +1,9 @@
 #include <shared/world.h>
 #include <shared/log.h>
+#include <client/render.h>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
-
-#include "render.h"
 
 #define R_UNLOADED_MAX 4
 
