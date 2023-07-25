@@ -8,8 +8,6 @@ fetchcontent_declare(glfw
     GIT_TAG         3.3.8
 )
 
-find_package(assimp)
-
 if (NOT assimp_FOUND)
     message(STATUS "Did not find assimp, building from source. This'll take a while.")
     set(ASSIMP_INSTALL OFF CACHE BOOL "")
