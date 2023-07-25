@@ -12,7 +12,9 @@ typedef enum {
     ENV_UNCONNECTED_CLIENT, // a client unconnected 
 } environment_t;
 
-extern environment_t loaded_env;
-extern char *fs_running_directory;
+extern environment_t env_loaded;
+extern char *env_running_directory;
+
+void env_exit(int status);
 
 #endif // SHARED_ENVIRONMENT_H_

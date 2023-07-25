@@ -9,7 +9,7 @@
 
 #include "render.h"
 
-char *fs_running_directory;
+char *env_running_directory;
 
 struct start_ctx { // derived from program arguments
     int width, height;
@@ -21,7 +21,7 @@ static int start(struct start_ctx *ctx) {
 
     char path[PATH_MAX];
     realpath(ctx->running_directory, path);
-    fs_running_directory = path;
+    env_running_directory = path;
 
     log_trace(ctx->running_directory);
     log_trace(path);

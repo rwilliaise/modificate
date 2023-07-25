@@ -2,7 +2,13 @@
 #include <shared/environment.h>
 #include <shared/log.h>
 
-environment_t loaded_env = ENV_DEDICATED_SERVER;
+#include <stdlib.h>
+
+environment_t env_loaded = ENV_DEDICATED_SERVER;
+
+void env_exit(int status) {
+    exit(status);
+}
 
 int main(int argc, char *argv[]) {
     log_open();

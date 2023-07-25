@@ -18,6 +18,7 @@ add_executable(modificate_client
     camera.c
     chunk.c
     atlas.c
+    stb_image.c
     ${GLAD_LOCATION}/src/gl.c
 )
 target_link_libraries(modificate_client PRIVATE glfw modificate_shared)

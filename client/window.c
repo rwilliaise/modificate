@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <shared/log.h>
 
+#include "stb_image.h"
 #include "render.h"
 
 GLFWwindow *r_win = NULL;

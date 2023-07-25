@@ -11,6 +11,19 @@
 int unloaded_amount = 0;
 r_chunk_t *unloaded[R_UNLOADED_MAX]; // holds unused meshes for later use
 
+r_chunk_t **to_render = NULL;
+size_t to_render_size = 0;
+
+static void r_chunk_add_loaded(r_chunk_t *chunk) {
+    if (chunk == NULL) { return; }
+    to_render = realloc(to_render, (++to_render_size) * sizeof(r_chunk_t *));
+    if (to_render == NULL) {
+        log_perror("Failed to track loaded chunk");
+        return;
+    }
+    to_render[to_render_size - 1] = chunk;
+}
+
 static r_chunk_t *r_chunk_replace(world_chunk_t *world_chunk) { // finds or creates a new chunk
     if (unloaded_amount > 0) {
         int idx = --unloaded_amount;
