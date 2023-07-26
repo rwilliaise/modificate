@@ -2,6 +2,18 @@
 #ifndef SHARED_ENVIRONMENT_H_
 #define SHARED_ENVIRONMENT_H_
 
+#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+#define MODIFICATE_POSIX 1
+#endif
+
+#if defined(__linux__)
+#define MODIFICATE_PLATFORM_LINUX 1
+#elif defined(__APPLE__)
+#define MODIFICATE_PLATFORM_MACOS 1
+#elif define(_WIN32)
+#define MODIFICATE_PLATFORM_WINDOWS 1
+#endif
+
 /**
  * Different states that the executable can be in. 
  */

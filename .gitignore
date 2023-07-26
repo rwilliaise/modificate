@@ -2,6 +2,10 @@
 # steamworks (see Steamworks API License; https://partner.steamgames.com/documentation/sdk_access_agreement/)
 thirdparty/steamworks/sdk/
 
+# ides
+.vscode
+.vim
+
 # cmake
 build*/
 cmake-build*/

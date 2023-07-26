@@ -4,6 +4,9 @@ option(MODIFICATE_PLUGIN "Only add server-side targets" OFF)
 
 set(CGLM_SHARED ON CACHE BOOL "")
 set(BUILD_SHARED_LIBS ON CACHE BOOL "")
+set(ENABLE_TEST OFF CACHE BOOL "")
+set(ENABLE_INSTALL OFF CACHE BOOL "")
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -18,8 +21,19 @@ project(modificate
     DESCRIPTION "Voxel-based sandbox game"
 )
 
+find_package(LibArchive)
+
+if (NOT LibArchive_FOUND)
+    fetchcontent_declare(libarchive
+        GIT_REPOSITORY  https://github.com/libarchive/libarchive.git
+        GIT_TAG         v3.7.0
+    )
+    fetchcontent_makeavailable(libarchive)
+    add_library(LibArchive::LibArchive ALIAS archive)
+endif()
+
 fetchcontent_declare(cglm
-    GIT_REPOSITORY  https://github.com/recp/cglm
+    GIT_REPOSITORY  https://github.com/recp/cglm.git
     GIT_TAG         v0.9.0
 )
 
@@ -34,7 +48,9 @@ target_include_directories(modificate_interface INTERFACE shared/include/
     client/include/ interface/include/ thirdparty/glad/include/)
 target_sources(modificate_interface INTERFACE
     interface/include/modificate/interface.h)
-target_link_libraries(modificate_interface INTERFACE cglm m)
+target_link_libraries(modificate_interface INTERFACE cglm m
+    LibArchive::LibArchive)
+add_library(modificate::interface ALIAS modificate_interface)
 
 set(CPACK_PACKAGE_NAME "Modificate")
 set(CPACK_PACKAGE_VENDOR "rwilliaise and constituents")
