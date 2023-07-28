@@ -41,7 +41,7 @@ MODEXPORT void mod_initialize(mod_t *mod);
  */
 MODEXPORT bool mod_loader_should_load(mod_t *loading_mod);
 /**
- * Loads a mod
+ * Loads and runs a mod's running context
  */
 MODEXPORT int mod_loader_load(mod_t *loading_mod);
 

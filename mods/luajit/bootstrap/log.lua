@@ -34,7 +34,3 @@ function GLOBAL.log.log(level, ...)
     FFI.C.log_log(level, "%s", _stringify(...))
 end
 
-function GLOBAL.print(...)
-    GLOBAL.log.log(GLOBAL.log.info, ...)
-end
-

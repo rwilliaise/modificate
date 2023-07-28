@@ -15,6 +15,7 @@ int mod_queue(char *root_path) {
     if (root_path == NULL) { return 1; }
     if (strlen(root_path) > PATH_MAX) { return 1; }
 
+
     return 0;
 }
 
@@ -29,15 +30,14 @@ int mod_path_exists(mod_t *mod, char *sub_path) {
     strcpy(path, mod->root_path);
     path[root_path_len] = '/';
     strcpy(&path[root_path_len + 1], sub_path);
-
-#if defined(MODIFICATE_POSIX)
-    struct stat buf;
-    stat(path, &buf);
+    char *resolved = realpath(path, NULL);
     
+#if defined(MODIFICATE_POSIX)
     
 #elif defined(MODIFICATE_PLATFORM_WINDOWS)
     // TODO
 #endif
+    free(resolved);
 
     return 0;
 }
