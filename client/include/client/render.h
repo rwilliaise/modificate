@@ -31,6 +31,10 @@ typedef struct {
 } r_chunk_t;
 
 typedef struct {
+    GLuint program;
+} r_shader_t;
+
+typedef struct {
     vec3 pos;
     float fov;
     versor rot;

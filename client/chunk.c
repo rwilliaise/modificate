@@ -1,3 +1,4 @@
+#include "cglm/types.h"
 #include <shared/world.h>
 #include <shared/log.h>
 #include <client/render.h>
@@ -87,6 +88,12 @@ int r_chunk_unload(r_chunk_t *chunk) {
     free(chunk);
     return 0;
 }
+
+struct vertex {
+    vec3 pos;
+    world_direction_t normal;
+    vec2 uv;
+};
 
 int r_chunk_rebuild(r_chunk_t *chunk) {
     if (chunk == NULL || chunk->chunk == NULL) { return 1; }

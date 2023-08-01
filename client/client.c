@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
 char *env_running_directory;
 
 struct start_ctx { // derived from program arguments
