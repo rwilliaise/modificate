@@ -81,10 +81,7 @@ add_compile_definitions(
 add_subdirectory(mods/luajit)
 
 if (NOT MODIFICATE_PLUGIN)
-    find_package(assimp)
-
     add_subdirectory(client)
-    target_link_libraries(modificate_interface INTERFACE glfw assimp::assimp)
 endif()
 
 add_subdirectory(shared)
